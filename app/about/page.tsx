@@ -42,7 +42,7 @@ export default function AboutPage() {
     }
 
     return (
-        <main ref={containerRef} className="min-h-[150vh] bg-black text-white selection:bg-white selection:text-black relative overflow-hidden font-mono">
+        <main ref={containerRef} className="min-h-screen bg-black text-white selection:bg-white selection:text-black relative overflow-hidden font-mono flex flex-col justify-center">
             <AuthDecor />
             <NoiseOverlay />
 
@@ -53,34 +53,34 @@ export default function AboutPage() {
             </div>
 
             {/* Top Navigation */}
-            <nav className="fixed top-0 left-0 w-full p-8 z-50 flex justify-between items-center">
+            <nav className="fixed top-0 left-0 w-full p-6 z-50 flex justify-between items-center">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                    <Link href="/" className="group flex items-center gap-4 text-[10px] uppercase tracking-[0.4em] text-white/50 hover:text-white transition-all">
-                        <div className="w-8 h-px bg-white/20 group-hover:w-12 group-hover:bg-white transition-all"></div>
+                    <Link href="/" className="group flex items-center gap-4 text-[9px] uppercase tracking-[0.4em] text-white/50 hover:text-white transition-all">
+                        <div className="w-6 h-px bg-white/20 group-hover:w-10 group-hover:bg-white transition-all"></div>
                         <span>Protocol: Return</span>
                     </Link>
                 </motion.div>
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] text-white/30 uppercase tracking-[0.4em]">
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-[9px] text-white/30 uppercase tracking-[0.4em]">
                     Subject: Qambar_Syed.sys
                 </motion.div>
             </nav>
 
-            <section className="relative z-10 container mx-auto px-6 pt-40 pb-20">
+            <section className="relative z-10 container mx-auto px-6 py-12">
                 <motion.div 
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-20"
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
                 >
                     {/* Visual Identity Column */}
-                    <motion.div variants={itemVariants} className="lg:col-span-5 space-y-12">
-                        <div className="relative group">
+                    <motion.div variants={itemVariants} className="lg:col-span-5 space-y-8">
+                        <div className="relative group max-w-xs mx-auto lg:mx-0">
                             {/* Decorative Frame */}
-                            <div className="absolute -inset-4 border border-white/5 pointer-events-none group-hover:border-white/20 transition-colors duration-700"></div>
-                            <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-white/40"></div>
-                            <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-white/40"></div>
-                            <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/40"></div>
-                            <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white/40"></div>
+                            <div className="absolute -inset-3 border border-white/5 pointer-events-none group-hover:border-white/20 transition-colors duration-700"></div>
+                            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/40"></div>
+                            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/40"></div>
+                            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/40"></div>
+                            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/40"></div>
                             
                             {/* Image Container with Scanning Effect */}
                             <div className="relative aspect-[4/5] w-full overflow-hidden bg-white/5 border border-white/10 grayscale hover:grayscale-0 transition-all duration-1000">
@@ -88,16 +88,16 @@ export default function AboutPage() {
                                     src="/pfp.jpeg" 
                                     alt="Mohammed Qambar Syed" 
                                     fill
-                                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-1000"
+                                    className="object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
                                     priority
                                 />
                                 {/* Scan Line */}
                                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent h-1/2 w-full -translate-y-full animate-[scan_4s_linear_infinite] pointer-events-none"></div>
                                 
                                 {/* HUD Overlays */}
-                                <div className="absolute top-4 right-4 flex flex-col items-end gap-1 opacity-40 group-hover:opacity-100 transition-opacity">
-                                    <div className="text-[8px] uppercase tracking-tighter">ID: 7267-8441</div>
-                                    <div className="w-12 h-1 bg-white/20 overflow-hidden">
+                                <div className="absolute top-3 right-3 flex flex-col items-end gap-1 opacity-40 group-hover:opacity-100 transition-opacity">
+                                    <div className="text-[7px] uppercase tracking-tighter">ID: 7267-8441</div>
+                                    <div className="w-10 h-0.5 bg-white/20 overflow-hidden">
                                         <div className="h-full bg-white w-2/3 animate-pulse"></div>
                                     </div>
                                 </div>
@@ -105,60 +105,60 @@ export default function AboutPage() {
                         </div>
 
                         {/* Status Grid */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="p-4 border border-white/5 bg-white/[0.02]">
-                                <div className="text-[8px] text-white/30 uppercase mb-2">Cognitive Layer</div>
-                                <div className="text-xs uppercase tracking-wider">Neural Networks</div>
+                        <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto lg:mx-0">
+                            <div className="p-3 border border-white/5 bg-white/[0.02]">
+                                <div className="text-[7px] text-white/30 uppercase mb-1">Cognitive Layer</div>
+                                <div className="text-[10px] uppercase tracking-wider">Neural Networks</div>
                             </div>
-                            <div className="p-4 border border-white/5 bg-white/[0.02]">
-                                <div className="text-[8px] text-white/30 uppercase mb-2">Core Engine</div>
-                                <div className="text-xs uppercase tracking-wider">Computer Vision</div>
+                            <div className="p-3 border border-white/5 bg-white/[0.02]">
+                                <div className="text-[7px] text-white/30 uppercase mb-1">Core Engine</div>
+                                <div className="text-[10px] uppercase tracking-wider">Computer Vision</div>
                             </div>
                         </div>
                     </motion.div>
 
                     {/* Content Column */}
-                    <motion.div variants={itemVariants} className="lg:col-span-7 flex flex-col justify-center space-y-16">
-                        <div className="space-y-6">
+                    <motion.div variants={itemVariants} className="lg:col-span-7 flex flex-col justify-center space-y-10">
+                        <div className="space-y-4">
                             <motion.div 
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.5 }}
                                 className="flex items-center gap-3 text-white/40"
                             >
-                                <Fingerprint className="w-4 h-4" />
-                                <span className="text-[10px] uppercase tracking-[0.5em]">Identity Verification Success</span>
+                                <Fingerprint className="w-3 h-3" />
+                                <span className="text-[9px] uppercase tracking-[0.5em]">Identity Verification Success</span>
                             </motion.div>
                             
-                            <h1 className="text-6xl md:text-8xl font-display tracking-tight uppercase leading-[0.85]">
+                            <h1 className="text-5xl md:text-7xl font-display tracking-tight uppercase leading-[0.85]">
                                 <GlitchText text="Qambar" />
                                 <span className="block text-white/20"><GlitchText text="Syed" /></span>
                             </h1>
                         </div>
 
-                        <div className="space-y-8 max-w-xl">
-                            <div className="relative pl-8 border-l border-white/10">
-                                <p className="text-lg md:text-xl leading-relaxed text-white/80 font-light">
+                        <div className="space-y-6 max-w-lg">
+                            <div className="relative pl-6 border-l border-white/10">
+                                <p className="text-base md:text-lg leading-relaxed text-white/80 font-light">
                                     <TextScramble>
-                                        Architecting the intersection of Machine Learning and XR. Building autonomous systems that don't just process data, but navigate human experience.
+                                        Architecting the intersection of Machine Learning and XR. Building autonomous systems that navigate human experience.
                                     </TextScramble>
                                 </p>
                             </div>
 
-                            <p className="text-sm text-white/50 leading-loose">
-                                Focused on high-fidelity AI applications, from computer vision modules to agentic career automation. My work is driven by the belief that silicon intelligence should serve as a seamless extension of biological potential.
+                            <p className="text-[11px] text-white/50 leading-relaxed uppercase tracking-wider">
+                                Focused on high-fidelity AI applications, from computer vision to agentic automation. Silicon intelligence as a seamless extension of biological potential.
                             </p>
                         </div>
 
                         {/* Social Terminal */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-4 text-white/20">
-                                <Share2 className="w-3 h-3" />
-                                <span className="text-[8px] uppercase tracking-[0.4em]">External Links Archive</span>
+                            <div className="flex items-center gap-3 text-white/20">
+                                <Share2 className="w-2.5 h-2.5" />
+                                <span className="text-[7px] uppercase tracking-[0.4em]">External Links Archive</span>
                                 <div className="flex-1 h-px bg-white/10"></div>
                             </div>
                             
-                            <div className="flex flex-wrap gap-8">
+                            <div className="flex flex-wrap gap-6">
                                 {[
                                     { icon: Twitter, label: 'X_Profile', href: 'https://x.com/__Qambar__' },
                                     { icon: Github, label: 'Source_Code', href: 'https://github.com/Qambar-dev-0207' },
@@ -169,10 +169,10 @@ export default function AboutPage() {
                                         <a 
                                             href={social.href} 
                                             target="_blank" 
-                                            className="group flex flex-col items-center gap-2"
+                                            className="group flex flex-col items-center gap-1.5"
                                         >
-                                            <social.icon className="w-5 h-5 text-white/40 group-hover:text-white transition-colors" />
-                                            <span className="text-[8px] uppercase tracking-widest text-white/20 group-hover:text-white/60 transition-colors">
+                                            <social.icon className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                                            <span className="text-[7px] uppercase tracking-widest text-white/20 group-hover:text-white/60 transition-colors">
                                                 {social.label}
                                             </span>
                                         </a>
@@ -184,24 +184,18 @@ export default function AboutPage() {
                 </motion.div>
             </section>
 
-            {/* Scrolling Footer Info */}
-            <div className="fixed bottom-0 left-0 w-full p-8 flex justify-between items-end pointer-events-none z-50">
+            {/* Fixed Footer Info */}
+            <div className="fixed bottom-0 left-0 w-full p-6 flex justify-between items-end pointer-events-none z-50">
                 <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                        <Terminal className="w-3 h-3 text-white/20" />
-                        <span className="text-[8px] text-white/20 uppercase">System_State: Stable</span>
-                    </div>
-                    <div className="w-32 h-0.5 bg-white/5">
-                        <motion.div 
-                            style={{ scaleX: scrollYProgress }} 
-                            className="h-full bg-white/40 origin-left"
-                        />
+                        <Terminal className="w-2.5 h-2.5 text-white/20" />
+                        <span className="text-[7px] text-white/20 uppercase">System_State: Stable</span>
                     </div>
                 </div>
                 
                 <div className="flex flex-col items-end gap-1">
-                    <Cpu className="w-4 h-4 text-white/20" />
-                    <span className="text-[8px] text-white/20 uppercase tracking-[0.3em]">Mantis_Protocol_v1.0.0</span>
+                    <Cpu className="w-3 h-3 text-white/20" />
+                    <span className="text-[7px] text-white/20 uppercase tracking-[0.3em]">Mantis_Protocol_v1.0.0</span>
                 </div>
             </div>
 
