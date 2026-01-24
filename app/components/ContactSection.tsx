@@ -24,11 +24,11 @@ export default function ContactSection() {
                     </p>
                     
                     <div className="flex gap-6 pt-4 border-t border-white/10">
-                        <a href="#" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-white text-gray-500 transition-colors">
-                            <Twitter className="w-4 h-4" /> @PraxisAI_OS
+                        <a href="https://x.com/__Qambar__" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-white text-gray-500 transition-colors">
+                            <Twitter className="w-4 h-4" /> @__Qambar__
                         </a>
-                        <a href="#" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-white text-gray-500 transition-colors">
-                            <Github className="w-4 h-4" /> /PraxisAI
+                        <a href="https://github.com/Qambar-dev-0207" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-white text-gray-500 transition-colors">
+                            <Github className="w-4 h-4" /> /Qambar-dev-0207
                         </a>
                     </div>
                 </div>

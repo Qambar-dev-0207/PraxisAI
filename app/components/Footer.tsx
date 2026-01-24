@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Activity } from 'lucide-react'
 
 export default function Footer() {
@@ -17,6 +18,7 @@ export default function Footer() {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-8 font-mono text-xs text-gray-400 uppercase tracking-wider">
+                    <Link href="/about" className="hover:text-white transition-colors">About</Link>
                     <a href="#" className="hover:text-white transition-colors">Manifesto</a>
                     <a href="#" className="hover:text-white transition-colors">Privacy Protocol</a>
                     <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
