@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRef } from 'react'
@@ -21,7 +21,7 @@ export default function AboutPage() {
     const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
     const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
 
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -32,7 +32,7 @@ export default function AboutPage() {
         }
     }
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
         visible: { 
             opacity: 1, 
