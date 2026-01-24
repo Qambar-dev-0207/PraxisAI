@@ -19,9 +19,9 @@ export default function Footer() {
 
                 <div className="flex flex-col md:flex-row gap-8 font-mono text-xs text-gray-400 uppercase tracking-wider">
                     <Link href="/about" className="hover:text-white transition-colors">About</Link>
-                    <a href="#" className="hover:text-white transition-colors">Manifesto</a>
-                    <a href="#" className="hover:text-white transition-colors">Privacy Protocol</a>
-                    <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+                    <Link href="/manifesto" className="hover:text-white transition-colors">Manifesto</Link>
+                    <Link href="/privacy" className="hover:text-white transition-colors">Privacy Protocol</Link>
+                    <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                 </div>
 
                 <div className="font-mono text-[10px] text-green-500 uppercase tracking-widest flex items-center gap-2 border border-green-900/30 px-3 py-1 rounded-full bg-green-900/10">
