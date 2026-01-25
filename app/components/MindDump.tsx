@@ -2,77 +2,71 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { saveThought, analyzeInput, transcribeAudio } from '../actions'
+import { saveThought, analyzeInput } from '../actions'
 import { ArrowRight, Clock, Calendar, AlertCircle, CheckCircle, Mic, MicOff, Sparkles, Activity, Terminal } from 'lucide-react'
+
+const SpeechRecognition = typeof window !== 'undefined' && ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
 
 export default function MindDump() {
   const [step, setStep] = useState<'INPUT' | 'ANALYZING' | 'IMPORTANCE' | 'SAVED'>('INPUT')
   const [content, setContent] = useState('')
   const [processedData, setProcessedData] = useState<any>(null)
   const [isListening, setIsListening] = useState(false)
-  const [isTranscribing, setIsTranscribing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const audioChunksRef = useRef<Blob[]>([])
+  const recognitionRef = useRef<any>(null)
 
   useEffect(() => {
-    if (step === 'INPUT' && inputRef.current && !isListening) {
-      inputRef.current.focus()
+    if (step === 'INPUT' && !isListening) {
+      inputRef.current?.focus()
+      // Initialize Web Speech API
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition()
+        recognition.continuous = true
+        recognition.interimResults = true
+        recognition.lang = 'en-US'
+        
+        recognition.onstart = () => {
+          setIsListening(true)
+        }
+        
+        recognition.onresult = (event: any) => {
+          let interimTranscript = ''
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript
+            if (event.results[i].isFinal) {
+              setContent(prev => prev + (prev && !prev.endsWith(' ') ? ' ' : '') + transcript)
+            } else {
+              interimTranscript += transcript
+            }
+          }
+        }
+        
+        recognition.onerror = (event: any) => {
+          console.error('Speech recognition error:', event.error)
+          if (event.error !== 'no-speech') {
+            alert(`Microphone error: ${event.error}`)
+          }
+        }
+        
+        recognition.onend = () => {
+          setIsListening(false)
+        }
+        
+        recognitionRef.current = recognition
+      }
     }
   }, [step, isListening])
 
-  const startListening = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const mediaRecorder = new MediaRecorder(stream)
-      
-      mediaRecorderRef.current = mediaRecorder
-      audioChunksRef.current = []
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data)
-        }
-      }
-
-      mediaRecorder.onstop = async () => {
-        setIsTranscribing(true)
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
-        
-        // Prepare form data for server action
-        const formData = new FormData()
-        formData.append('audio', audioBlob, 'recording.webm')
-
-        try {
-            const transcription = await transcribeAudio(formData)
-            if (transcription) {
-                setContent(prev => prev + (prev && !prev.endsWith(' ') ? ' ' : '') + transcription)
-            }
-        } catch (error) {
-            console.error("Transcription error:", error)
-            alert("Failed to transcribe audio.")
-        } finally {
-            setIsTranscribing(false)
-        }
-        
-        // Stop all tracks
-        stream.getTracks().forEach(track => track.stop())
-      }
-
-      mediaRecorder.start()
-      setIsListening(true)
-
-    } catch (err) {
-      console.error("Error accessing microphone:", err)
-      alert("Microphone access denied or not supported.")
+  const startListening = () => {
+    if (!SpeechRecognition) {
+      alert('Speech recognition is not supported in your browser.')
+      return
     }
+    recognitionRef.current?.start()
   }
 
   const stopListening = () => {
-    if (mediaRecorderRef.current && isListening) {
-      mediaRecorderRef.current.stop()
-      setIsListening(false)
-    }
+    recognitionRef.current?.stop()
   }
 
   const toggleListening = () => isListening ? stopListening() : startListening()
@@ -121,11 +115,10 @@ export default function MindDump() {
                 
                 <button 
                     onClick={toggleListening}
-                    disabled={isTranscribing}
-                    className={`group flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-500 ${isListening ? 'bg-brand-black text-brand-white border-brand-black' : 'bg-transparent text-brand-black/40 border-brand-black/10 hover:border-brand-black hover:text-brand-black'} ${isTranscribing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`group flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-500 ${isListening ? 'bg-brand-black text-brand-white border-brand-black' : 'bg-transparent text-brand-black/40 border-brand-black/10 hover:border-brand-black hover:text-brand-black'}`}
                 >
                     <span className="font-mono text-[10px] uppercase tracking-widest">
-                        {isTranscribing ? 'Processing...' : isListening ? 'Listening' : 'Voice Mode'}
+                        {isListening ? 'Listening' : 'Voice Mode'}
                     </span>
                     {isListening ? <MicOff className="w-3 h-3 animate-pulse" /> : <Mic className="w-3 h-3" />}
                 </button>
@@ -139,8 +132,8 @@ export default function MindDump() {
                   onChange={(e) => setContent(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className="w-full bg-transparent text-4xl md:text-6xl font-display uppercase tracking-tighter text-brand-black border-b border-brand-black/10 focus:border-brand-black outline-none pb-8 transition-all duration-700 placeholder:text-brand-black/5 pr-16"
-                  placeholder={isListening ? "RECORDING..." : isTranscribing ? "TRANSCRIBING..." : "ENTER THOUGHT"}
-                  disabled={isListening || isTranscribing}
+                  placeholder={isListening ? "RECORDING..." : "ENTER THOUGHT"}
+                  disabled={isListening}
                 />
                 <div className="absolute right-0 bottom-8">
                      <ArrowRight className={`w-8 h-8 transition-all duration-500 ${content.trim() ? 'opacity-100 translate-x-0 text-brand-black' : 'opacity-0 -translate-x-4 text-brand-black/20'}`} />

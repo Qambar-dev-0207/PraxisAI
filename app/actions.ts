@@ -3,7 +3,7 @@
 import { auth } from '@/auth'
 import { getDb } from '../lib/mongodb'
 import { revalidatePath } from 'next/cache'
-import { analyzeThought, generateEmbedding, analyzePatterns, transcribeAudioBuffer } from '../lib/ai'
+import { analyzeThought, generateEmbedding, analyzePatterns } from '../lib/ai'
 import { ObjectId } from 'mongodb'
 
 // Helper to sanitize Mongo docs recursively
@@ -40,16 +40,6 @@ function serializeDoc(doc: any): any {
 
 export async function analyzeInput(content: string) {
   return await analyzeThought(content)
-}
-
-export async function transcribeAudio(formData: FormData) {
-  const file = formData.get('audio') as File
-  if (!file) return null
-
-  const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
-  
-  return await transcribeAudioBuffer(buffer)
 }
 
 export async function saveThought(

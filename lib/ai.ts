@@ -121,7 +121,7 @@ export async function transcribeAudioBuffer(audioBuffer: Buffer): Promise<string
   }
   
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const result = await model.generateContent([
       {
@@ -130,10 +130,15 @@ export async function transcribeAudioBuffer(audioBuffer: Buffer): Promise<string
           data: audioBuffer.toString("base64")
         }
       },
-      { text: "Transcribe this audio exactly. Do not add any commentary." }
+      { text: "Transcribe this audio exactly as spoken. Do not add any commentary or corrections." }
     ]);
     
-    return result.response.text();
+    const text = result.response.text();
+    if (!text || text.trim().length === 0) {
+      console.warn("Transcription returned empty response");
+      return null;
+    }
+    return text;
   } catch (error) {
     console.error("Transcription failed:", error);
     return null;
