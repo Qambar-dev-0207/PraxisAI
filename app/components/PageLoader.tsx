@@ -14,7 +14,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    // Check user's motion preferences
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReducedMotion(mq.matches)
   }, [])
@@ -43,7 +42,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
       transition={{ duration: animationDuration, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 z-50 bg-white flex items-center justify-center overflow-hidden"
     >
-      {/* Animated Grid Background */}
       {!prefersReducedMotion && (
         <div className="absolute inset-0 opacity-[0.03]">
           <div className="grid grid-cols-12 h-full w-full">
@@ -65,7 +63,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         </div>
       )}
 
-      {/* Geometric Elements - Top Left */}
       {!prefersReducedMotion && (
         <motion.div
           className="absolute top-20 left-20 w-32 h-32 border border-black/20"
@@ -90,7 +87,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         </motion.div>
       )}
 
-      {/* Geometric Elements - Bottom Right */}
       {!prefersReducedMotion && (
         <motion.div
           className="absolute bottom-20 right-20 w-24 h-24 border border-black/20"
@@ -115,9 +111,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         </motion.div>
       )}
 
-      {/* Center Content */}
       <div className="relative z-10 text-center space-y-8">
-        {/* Animated Logo/Icon */}
         {!prefersReducedMotion && (
           <motion.div
             className="mx-auto w-16 h-16 mb-8 relative"
@@ -158,7 +152,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
           </motion.div>
         )}
 
-        {/* Main Text with Glitch Effect */}
         <div className="space-y-4">
           <h2 className="text-4xl md:text-5xl font-display tracking-tight text-black">
             <GlitchText text="PRAXIS" trigger={isLoading && !prefersReducedMotion} />
@@ -169,7 +162,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
           </p>
         </div>
 
-        {/* Loading Bar */}
         {!prefersReducedMotion && (
           <motion.div className="w-64 h-0.5 bg-black/10 overflow-hidden rounded-full">
             <motion.div
@@ -186,7 +178,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
           </motion.div>
         )}
 
-        {/* Status Text */}
         {!prefersReducedMotion && (
           <motion.p className="font-mono text-xs text-black/40 tracking-wider">
             <motion.span
@@ -199,7 +190,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         )}
       </div>
 
-      {/* Floating Particles */}
       {!prefersReducedMotion && [...Array(5)].map((_, i) => (
         <motion.div
           key={`particle-${i}`}
@@ -223,7 +213,6 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         />
       ))}
 
-      {/* Scanlines Effect */}
       {!prefersReducedMotion && (
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
@@ -247,207 +236,3 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
   )
 }
 
-
-  if (!isLoading) {
-    return null
-  }
-
-  const dots = '.'.repeat(dotCount)
-
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-0 z-50 bg-white flex items-center justify-center overflow-hidden"
-    >
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 opacity-[0.03]">
-        <div className="grid grid-cols-12 h-full w-full">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="border-r border-black h-full"
-              animate={{
-                opacity: [0.02, 0.1, 0.02],
-              }}
-              transition={{
-                duration: 3,
-                delay: i * 0.1,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Geometric Elements - Top Left */}
-      <motion.div
-        className="absolute top-20 left-20 w-32 h-32 border border-black/20"
-        animate={{
-          rotate: 360,
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      >
-        <motion.div
-          className="w-full h-full border border-black/10"
-          animate={{ scale: [0.8, 1.2, 0.8] }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-          }}
-        />
-      </motion.div>
-
-      {/* Geometric Elements - Bottom Right */}
-      <motion.div
-        className="absolute bottom-20 right-20 w-24 h-24 border border-black/20"
-        animate={{
-          rotate: -360,
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      >
-        <motion.div
-          className="w-full h-full border border-black/10"
-          animate={{ scale: [1.2, 0.8, 1.2] }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-          }}
-        />
-      </motion.div>
-
-      {/* Center Content */}
-      <div className="relative z-10 text-center space-y-8">
-        {/* Animated Logo/Icon */}
-        <motion.div
-          className="mx-auto w-16 h-16 mb-8 relative"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-          }}
-        >
-          {/* Concentric circles */}
-          <svg
-            className="w-full h-full"
-            viewBox="0 0 64 64"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          >
-            <circle cx="32" cy="32" r="30" />
-            <circle cx="32" cy="32" r="20" />
-            <circle cx="32" cy="32" r="10" />
-            <motion.circle
-              cx="32"
-              cy="32"
-              r="24"
-              strokeWidth="0.5"
-              opacity="0.3"
-              animate={{
-                r: [24, 32, 24],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-              }}
-            />
-          </svg>
-        </motion.div>
-
-        {/* Main Text with Glitch Effect */}
-        <div className="space-y-4">
-          <h2 className="text-4xl md:text-5xl font-display tracking-tight text-black">
-            <GlitchText text="PRAXIS" trigger={isLoading} />
-          </h2>
-          <p className="font-mono text-sm md:text-base text-black/60 tracking-widest uppercase">
-            {displayText}
-            <span className="inline-block w-2">{dots}</span>
-          </p>
-        </div>
-
-        {/* Loading Bar */}
-        <motion.div className="w-64 h-0.5 bg-black/10 overflow-hidden rounded-full">
-          <motion.div
-            className="h-full bg-black"
-            animate={{
-              x: [-256, 256],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        </motion.div>
-
-        {/* Percentage Counter */}
-        <motion.p className="font-mono text-xs text-black/40 tracking-wider">
-          <motion.span
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            NEURAL PATHWAYS ENGAGING
-          </motion.span>
-        </motion.p>
-      </div>
-
-      {/* Floating Particles - Glitch Elements */}
-      {[...Array(5)].map((_, i) => (
-        <motion.div
-          key={`particle-${i}`}
-          className="absolute w-1 h-1 bg-black/20 rounded-full"
-          animate={{
-            x: [0, 100 * Math.cos((i / 5) * Math.PI * 2), 0],
-            y: [0, 100 * Math.sin((i / 5) * Math.PI * 2), 0],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: 4 + i,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          style={{
-            left: '50%',
-            top: '50%',
-            marginLeft: '-2px',
-            marginTop: '-2px',
-          }}
-        />
-      ))}
-
-      {/* Scanlines Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute inset-0 bg-repeat"
-          style={{
-            backgroundImage:
-              'linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.05) 75%, rgba(0, 0, 0, 0.05) 76%, transparent 77%, transparent)',
-            backgroundSize: '100% 4px',
-          }}
-          animate={{
-            y: [0, 4],
-          }}
-          transition={{
-            duration: 0.1,
-            repeat: Infinity,
-          }}
-        />
-      </div>
-    </motion.div>
-  )
-}

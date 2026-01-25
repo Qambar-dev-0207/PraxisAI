@@ -4,10 +4,6 @@ const nextConfig: NextConfig = {
   output: "standalone",
   reactCompiler: true,
   
-  // Performance Optimizations
-  swcMinify: true,
-  compress: true,
-  
   // Image optimization
   images: {
     unoptimized: false,

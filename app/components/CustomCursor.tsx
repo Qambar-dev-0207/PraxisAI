@@ -63,31 +63,3 @@ export default function CustomCursor() {
     </>
   )
 }
-
-  return (
-    <>
-      {/* Main Dot */}
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
-        animate={{
-          x: mousePosition.x - 4,
-          y: mousePosition.y - 4,
-          scale: isHovering ? 0 : 1, // Hide dot when hovering
-        }}
-        transition={{ type: "spring", stiffness: 900, damping: 30 }}
-      />
-      
-      {/* Outer Ring */}
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border border-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
-        animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isHovering ? 1.5 : 0.5,
-          opacity: isHovering ? 1 : 0.5,
-        }}
-        transition={{ type: "spring", stiffness: 500, damping: 28 }}
-      />
-    </>
-  )
-}
