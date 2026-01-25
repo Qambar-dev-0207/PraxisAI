@@ -11,6 +11,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Disable telemetry during build
 ENV NEXT_TELEMETRY_DISABLED=1
+# Skip authentication/DB checks during build
+ENV DATABASE_URL=mongodb://localhost:27017
+ENV NEXTAUTH_SECRET=build-time-secret-key-change-in-production
 RUN npm run build
 
 # Stage 3: Production server
