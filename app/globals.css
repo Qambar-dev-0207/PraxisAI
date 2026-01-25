@@ -41,12 +41,28 @@
 }
 
 /* Base Styles */
+html {
+  scroll-behavior: auto; /* Let Lenis handle smooth scrolling */
+}
+
 body {
   background-color: var(--color-brand-white);
   color: var(--color-brand-black);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .transform-style-3d {
@@ -68,4 +84,18 @@ h1, h2, h3, h4, h5, h6 {
 /* Utilities */
 .stroke-text {
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Performance: GPU acceleration for animated elements */
+.will-animate {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimize images */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }

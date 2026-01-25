@@ -11,7 +11,8 @@ import FeaturesGrid from './components/FeaturesGrid'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import MagneticButton from './components/MagneticButton'
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion'
+import PageLoader from './components/PageLoader'
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Globe, Layers, Activity } from 'lucide-react'
 import AuthDecor from './components/AuthDecor'
 
@@ -44,13 +45,27 @@ function Counter({ from, to, duration = 2 }: { from: number, to: number, duratio
 
 export default function LandingPage() {
   const containerRef = useRef(null)
+  const [isLoading, setIsLoading] = useState(true)
   const { scrollY } = useScroll()
   const y1 = useTransform(scrollY, [0, 500], [0, 200])
   const y2 = useTransform(scrollY, [0, 500], [0, 100])
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
 
+  // Simulate 3D scene loading with a minimum duration
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000) // 3 second minimum load time for dramatic effect
+
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
-    <main ref={containerRef} className="min-h-screen relative text-black selection:bg-amber-500/30 selection:text-black bg-white">
+    <>
+      <AnimatePresence>
+        {isLoading && <PageLoader isLoading={isLoading} />}
+      </AnimatePresence>
+      <main ref={containerRef} className="min-h-screen relative text-black selection:bg-amber-500/30 selection:text-black bg-white">
       
       <AuthDecor />
       <NoiseOverlay />
@@ -196,5 +211,6 @@ export default function LandingPage() {
       </div>
 
     </main>
+    </>
   )
 }

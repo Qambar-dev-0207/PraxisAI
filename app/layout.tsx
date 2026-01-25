@@ -9,22 +9,31 @@ import MotionConfig from "./components/MotionConfig";
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: 'swap',
+  fallback: ['system-ui', 'arial'],
 });
 
 const bebas = Bebas_Neue({
   variable: "--font-display",
   weight: "400",
   subsets: ["latin"],
+  display: 'swap',
+  fallback: ['system-ui', 'arial'],
 });
 
 const mono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  display: 'swap',
+  fallback: ['monospace'],
 });
 
 export const metadata: Metadata = {
   title: "Praxis AI",
   description: "Externalize memory. Preserve clarity.",
+  metadataBase: new URL('https://praxis-ai.vercel.app'),
+  viewport: 'width=device-width, initial-scale=1',
+  robots: 'index, follow',
 };
 
 export default function RootLayout({
