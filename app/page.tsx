@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
 import TransitionLink from './components/TransitionLink'
 import TextScramble from './components/TextScramble'
 import GlitchText from './components/GlitchText'
@@ -12,7 +11,7 @@ import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import MagneticButton from './components/MagneticButton'
 import PageLoader from './components/PageLoader'
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Globe, Layers, Activity } from 'lucide-react'
 import AuthDecor from './components/AuthDecor'
 
@@ -46,10 +45,28 @@ function Counter({ from, to, duration = 2 }: { from: number, to: number, duratio
 export default function LandingPage() {
   const containerRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
   const { scrollY } = useScroll()
-  const y1 = useTransform(scrollY, [0, 500], [0, 200])
-  const y2 = useTransform(scrollY, [0, 500], [0, 100])
+  // Disable parallax on mobile for better performance
+  const y1 = useTransform(scrollY, [0, 500], isMobile ? [0, 0] : [0, 200])
+  const y2 = useTransform(scrollY, [0, 500], isMobile ? [0, 0] : [0, 100])
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
+
+  // Detect mobile on mount and listen for changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)')
+    
+    // Set initial state through callback to avoid synchronous setState
+    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      const matches = 'matches' in e ? e.matches : (e as MediaQueryList).matches
+      setIsMobile(matches)
+    }
+    
+    // Use addEventListener's initial call workaround
+    handleChange(mediaQuery)
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   // Simulate 3D scene loading with a minimum duration
   useEffect(() => {

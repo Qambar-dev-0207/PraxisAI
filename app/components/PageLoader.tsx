@@ -9,13 +9,27 @@ interface PageLoaderProps {
 }
 
 export default function PageLoader({ isLoading }: PageLoaderProps) {
-  const [displayText, setDisplayText] = useState('INITIALIZING')
   const [dotCount, setDotCount] = useState(0)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
+    // Set hydration flag and check motion preferences
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mq.matches)
+    const isMobileDevice = window.matchMedia('(max-width: 768px)').matches
+    
+    // Set both state updates in a callback to batch them
+    Promise.resolve().then(() => {
+      setIsHydrated(true)
+      setPrefersReducedMotion(mq.matches || isMobileDevice)
+    })
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches || isMobileDevice)
+    }
+    
+    mq.addEventListener('change', handleChange)
+    return () => mq.removeEventListener('change', handleChange)
   }, [])
 
   useEffect(() => {
@@ -33,7 +47,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
   }
 
   const dots = '.'.repeat(dotCount)
-  const animationDuration = prefersReducedMotion ? 0 : 0.8
+  const animationDuration = !isHydrated || prefersReducedMotion ? 0 : 0.8
 
   return (
     <motion.div
@@ -42,7 +56,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
       transition={{ duration: animationDuration, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 z-50 bg-white flex items-center justify-center overflow-hidden"
     >
-      {!prefersReducedMotion && (
+      {isHydrated && !prefersReducedMotion && (
         <div className="absolute inset-0 opacity-[0.03]">
           <div className="grid grid-cols-12 h-full w-full">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -63,7 +77,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         </div>
       )}
 
-      {!prefersReducedMotion && (
+      {isHydrated && !prefersReducedMotion && (
         <motion.div
           className="absolute top-20 left-20 w-32 h-32 border border-black/20"
           animate={{
@@ -87,7 +101,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         </motion.div>
       )}
 
-      {!prefersReducedMotion && (
+      {isHydrated && !prefersReducedMotion && (
         <motion.div
           className="absolute bottom-20 right-20 w-24 h-24 border border-black/20"
           animate={{
@@ -112,7 +126,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
       )}
 
       <div className="relative z-10 text-center space-y-8">
-        {!prefersReducedMotion && (
+        {isHydrated && !prefersReducedMotion && (
           <motion.div
             className="mx-auto w-16 h-16 mb-8 relative"
             animate={{
@@ -154,15 +168,15 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
 
         <div className="space-y-4">
           <h2 className="text-4xl md:text-5xl font-display tracking-tight text-black">
-            <GlitchText text="PRAXIS" trigger={isLoading && !prefersReducedMotion} />
+            <GlitchText text="PRAXIS" trigger={isLoading && isHydrated && !prefersReducedMotion} />
           </h2>
           <p className="font-mono text-sm md:text-base text-black/60 tracking-widest uppercase">
-            {displayText}
+            INITIALIZING
             <span className="inline-block w-2">{dots}</span>
           </p>
         </div>
 
-        {!prefersReducedMotion && (
+        {isHydrated && !prefersReducedMotion && (
           <motion.div className="w-64 h-0.5 bg-black/10 overflow-hidden rounded-full">
             <motion.div
               className="h-full bg-black"
@@ -178,7 +192,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
           </motion.div>
         )}
 
-        {!prefersReducedMotion && (
+        {isHydrated && !prefersReducedMotion && (
           <motion.p className="font-mono text-xs text-black/40 tracking-wider">
             <motion.span
               animate={{ opacity: [0.4, 1, 0.4] }}
@@ -190,7 +204,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         )}
       </div>
 
-      {!prefersReducedMotion && [...Array(5)].map((_, i) => (
+      {isHydrated && !prefersReducedMotion && [...Array(5)].map((_, i) => (
         <motion.div
           key={`particle-${i}`}
           className="absolute w-1 h-1 bg-black/20 rounded-full"
@@ -213,7 +227,7 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
         />
       ))}
 
-      {!prefersReducedMotion && (
+      {isHydrated && !prefersReducedMotion && (
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
             className="absolute inset-0 bg-repeat"

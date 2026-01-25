@@ -38,7 +38,6 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Main Dot */}
       <motion.div
         className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
         animate={{
@@ -49,7 +48,6 @@ export default function CustomCursor() {
         transition={{ type: "spring", stiffness: 900, damping: 30 }}
       />
       
-      {/* Outer Ring */}
       <motion.div
         className="fixed top-0 left-0 w-8 h-8 border border-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
         animate={{

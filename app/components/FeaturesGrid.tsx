@@ -88,15 +88,16 @@ const features = [
   }
 ]
 
-function FeatureCard({ feature }: { feature: any }) {
+function FeatureCard({ feature, isMobile }: { feature: any, isMobile: boolean }) {
     const x = useMotionValue(0)
     const y = useMotionValue(0)
     
-    // Tilt effect transforms
-    const rotateX = useTransform(y, [-0.5, 0.5], ["2deg", "-2deg"])
-    const rotateY = useTransform(x, [-0.5, 0.5], ["-2deg", "2deg"])
+    // Tilt effect transforms - disabled on mobile
+    const rotateX = useTransform(y, [-0.5, 0.5], isMobile ? ["0deg", "0deg"] : ["2deg", "-2deg"])
+    const rotateY = useTransform(x, [-0.5, 0.5], isMobile ? ["0deg", "0deg"] : ["-2deg", "2deg"])
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (isMobile) return // Skip mouse events on mobile
         const rect = e.currentTarget.getBoundingClientRect()
         const width = rect.width
         const height = rect.height
@@ -229,7 +230,7 @@ export default function FeaturesGrid() {
         >
           {features.map((feature) => (
             <div key={feature.id} className={isMobile ? 'w-full' : ''}>
-                 <FeatureCard feature={feature} />
+                 <FeatureCard feature={feature} isMobile={isMobile} />
             </div>
           ))}
           {!isMobile && <div className="w-[10vw]"></div>}
