@@ -1,4 +1,4 @@
-import { useRef, Suspense, useEffect } from 'react'
+import { useRef, Suspense, useEffect, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Float, Environment } from '@react-three/drei'
 import * as THREE from 'three'
@@ -42,7 +42,7 @@ function AbstractShape() {
   const isMobile = viewport.width < 5.5 // Breakpoint for mobile layout in 3D units
 
   // Reduce particle count on mobile for better performance
-  const count = isMobile ? 250 : 500
+  const count = isMobile ? 60 : 400
   
   // Store data in refs to avoid re-renders and keep it mutable but persistent
   const dataRef = useRef<{ initialPositions: Float32Array, targetPositions: Float32Array, randomRotations: Float32Array } | null>(null)
@@ -50,13 +50,13 @@ function AbstractShape() {
 
   // Initialize data once on mount using useEffect (not during render)
   useEffect(() => {
-    if (dataRef.current == null) {
-      dataRef.current = generateParticleData(count)
-    }
+    // Regenerate data only if count changes (mobile <-> desktop switch)
+    dataRef.current = generateParticleData(count)
   }, [count])
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
+    // Optimization: Cache scrollY to avoid layout thrashing, though in loop it's unavoidable without scroll listener
     const scrollY = window.scrollY
     const viewportHeight = window.innerHeight
     
@@ -73,6 +73,7 @@ function AbstractShape() {
       meshRef.current.rotation.y = t * 0.1
       meshRef.current.rotation.x = t * 0.05
 
+      // Optimization: Use a simpler loop for mobile if needed, but reducing count is best
       for (let i = 0; i < count; i++) {
         const ix = initialPositions[i * 3]
         const iy = initialPositions[i * 3 + 1]
@@ -83,9 +84,9 @@ function AbstractShape() {
         const tz = targetPositions[i * 3 + 2]
 
         // Smooth Lerp Position
-        tempObj.position.x = THREE.MathUtils.lerp(ix, tx, mixFactor)
-        tempObj.position.y = THREE.MathUtils.lerp(iy, ty, mixFactor)
-        tempObj.position.z = THREE.MathUtils.lerp(iz, tz, mixFactor)
+        tempObj.position.x = ix + (tx - ix) * mixFactor
+        tempObj.position.y = iy + (ty - iy) * mixFactor
+        tempObj.position.z = iz + (tz - iz) * mixFactor
 
         // Rotation
         tempObj.rotation.x = randomRotations[i*3] + t * 0.2
@@ -121,9 +122,9 @@ function AbstractShape() {
             color="#000000"
             metalness={0.9}
             roughness={0.1}
-            clearcoat={1}
+            clearcoat={isMobile ? 0 : 1} // Disable clearcoat on mobile
             clearcoatRoughness={0.1}
-            iridescence={1.5}
+            iridescence={isMobile ? 0 : 1.5} // Disable iridescence on mobile
             iridescenceIOR={1.8}
             iridescenceThicknessRange={[100, 400]}
             envMapIntensity={2}
@@ -146,12 +147,21 @@ function AbstractShape() {
 }
 
 export default function MantisScene() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 768px)').matches)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   return (
     <div className="fixed inset-0 w-full h-full z-0 bg-transparent pointer-events-none">
       <Canvas 
         camera={{ position: [-4, 0, 9], fov: 35 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }} 
+        dpr={isMobile ? [1, 1.5] : [1, 2]} // Cap DPR on mobile
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} 
       >
         <Suspense fallback={null}>
             {/* Transparent background so HTML background shows */}
