@@ -19,7 +19,8 @@ export default function AuthDecor() {
         initialX: Math.random() * window.innerWidth,
         initialY: Math.random() * window.innerHeight,
         duration: Math.random() * 5 + 5,
-        delay: Math.random() * 5
+        delay: Math.random() * 5,
+        targetY: Math.random() * -100
     }))
     setParticles(newParticles)
 
@@ -60,7 +61,7 @@ export default function AuthDecor() {
             opacity: 0 
           }}
           animate={{ 
-            y: [null, Math.random() * -100],
+            y: [null, p.targetY],
             opacity: [0, 0.5, 0]
           }}
           transition={{ 

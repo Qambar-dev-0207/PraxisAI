@@ -3,7 +3,8 @@ import InsightStream from '../components/InsightStream'
 import { getPendingCount, getRecentPatterns } from '../actions'
 import Link from 'next/link'
 import { ArrowRight, User, Terminal, LogOut } from 'lucide-react'
-import { auth, signOut } from '@/auth'
+import { auth } from '@/auth'
+import { logout } from '@/app/lib/auth-actions'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,12 +30,7 @@ export default async function Dashboard() {
             </div>
         </div>
 
-        <form 
-            action={async () => {
-                'use server';
-                await signOut({ redirectTo: '/' });
-            }}
-        >
+        <form action={logout}>
             <button 
                 type="submit"
                 className="group flex items-center gap-2 px-4 py-2 border border-brand-black/10 hover:border-brand-black transition-all font-mono text-[10px] uppercase tracking-widest"

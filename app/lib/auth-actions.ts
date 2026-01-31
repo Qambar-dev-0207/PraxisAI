@@ -1,6 +1,6 @@
 'use server';
  
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import { getDb } from '@/lib/mongodb';
 import bcrypt from 'bcryptjs';
@@ -10,10 +10,13 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
     await signIn('credentials', {
-      ...Object.fromEntries(formData),
+      email,
+      password,
       redirectTo: '/dashboard',
-      callbackUrl: '/dashboard',
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -26,6 +29,10 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function logout() {
+  await signOut({ redirectTo: '/' });
 }
 
 export async function registerUser(

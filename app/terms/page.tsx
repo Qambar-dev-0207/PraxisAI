@@ -45,7 +45,7 @@ export default function TermsPage() {
                         <section>
                             <h3 className="text-white font-display text-2xl uppercase tracking-wider mb-4 border-b border-white/10 pb-2">1. Acceptance of Protocol</h3>
                             <p>
-                                By accessing the Praxis AI interface ("The System"), you agree to be bound by these Terms. If you do not agree to these terms, do not initiate the connection protocol. The System reserves the right to terminate access for any entity violating these parameters.
+                                By accessing the Praxis AI interface (&quot;The System&quot;), you agree to be bound by these Terms. If you do not agree to these terms, do not initiate the connection protocol. The System reserves the right to terminate access for any entity violating these parameters.
                             </p>
                         </section>
 
@@ -69,7 +69,7 @@ export default function TermsPage() {
                             <h3 className="text-white font-display text-2xl uppercase tracking-wider mb-4 border-b border-white/10 pb-2">4. Disclaimer of Warranty</h3>
                             <div className="p-4 border border-amber-500/20 bg-amber-500/5 rounded">
                                 <p className="text-amber-500/80">
-                                    THE SYSTEM IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. WE DO NOT GUARANTEE UNINTERRUPTED UPTIME OR ABSOLUTE DATA PERMANENCE IN THE EVENT OF CATASTROPHIC SERVER FAILURE.
+                                    THE SYSTEM IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND. WE DO NOT GUARANTEE UNINTERRUPTED UPTIME OR ABSOLUTE DATA PERMANENCE IN THE EVENT OF CATASTROPHIC SERVER FAILURE.
                                 </p>
                             </div>
                         </section>

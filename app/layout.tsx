@@ -32,8 +32,12 @@ export const metadata: Metadata = {
   title: "Praxis AI",
   description: "Externalize memory. Preserve clarity.",
   metadataBase: new URL('https://praxis-ai.vercel.app'),
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

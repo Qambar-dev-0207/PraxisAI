@@ -69,7 +69,7 @@ export default function ManifestoPage() {
                                 03. Active Intelligence
                             </h2>
                             <p>
-                                Passive storage is obsolete. Data must work. Our agents don't just retrieve; they synthesize, predict, and optimize. A resume is not a document; it is a dynamic representation of potential. A project is not a file; it is a proof of capability.
+                                Passive storage is obsolete. Data must work. Our agents don&apos;t just retrieve; they synthesize, predict, and optimize. A resume is not a document; it is a dynamic representation of potential. A project is not a file; it is a proof of capability.
                             </p>
                         </section>
 
@@ -86,7 +86,7 @@ export default function ManifestoPage() {
 
                     <div className="pt-12 border-t border-white/10">
                         <p className="font-display text-2xl text-white uppercase tracking-wider text-center">
-                            "We do not predict the future. We compile it."
+                            &quot;We do not predict the future. We compile it.&quot;
                         </p>
                     </div>
                 </motion.div>

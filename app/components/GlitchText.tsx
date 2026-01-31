@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 
 const CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -16,7 +16,7 @@ export default function GlitchText({ text, as: Component = 'span', className, tr
   const [displayText, setDisplayText] = useState(text)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   
-  const scramble = () => {
+  const scramble = useCallback(() => {
     let iteration = 0
     
     if (intervalRef.current) clearInterval(intervalRef.current)
@@ -40,13 +40,13 @@ export default function GlitchText({ text, as: Component = 'span', className, tr
       
       iteration += 1 / 3
     }, 30)
-  }
+  }, [text])
 
   useEffect(() => {
     if (trigger) {
         scramble()
     }
-  }, [trigger])
+  }, [trigger, scramble])
 
   return (
     <Component 

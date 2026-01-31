@@ -74,7 +74,7 @@ export default function PrivacyPage() {
                                 <FileWarning className="w-5 h-5 text-red-500" /> Data Purge
                             </h3>
                             <p>
-                                Users retain the right to the "Right to be Forgotten." Initiating a Data Purge sequence will irrevocably wipe all user-associated records from our distributed nodes within 24 hours. This action is permanent and cannot be undone.
+                                Users retain the right to the &quot;Right to be Forgotten.&quot; Initiating a Data Purge sequence will irrevocably wipe all user-associated records from our distributed nodes within 24 hours. This action is permanent and cannot be undone.
                             </p>
                         </div>
 
