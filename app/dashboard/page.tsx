@@ -5,13 +5,18 @@ import Link from 'next/link'
 import { ArrowRight, Terminal, LogOut } from 'lucide-react'
 import { auth } from '@/auth'
 import { logout } from '@/app/lib/auth-actions'
+import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
+
+async function RecentPatterns() {
+  const recentPatterns = await getRecentPatterns()
+  return <InsightStream patterns={recentPatterns} />
+}
 
 export default async function Dashboard() {
   const session = await auth()
   const pendingCount = await getPendingCount()
-  const recentPatterns = await getRecentPatterns()
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-24 relative overflow-hidden bg-brand-white text-brand-black font-sans selection:bg-brand-black selection:text-brand-white">
@@ -50,7 +55,9 @@ export default async function Dashboard() {
 
       <div className="z-10 w-full flex flex-col items-center gap-12 mt-20 md:mt-0">
         <MindDump />
-        <InsightStream patterns={recentPatterns} />
+        <Suspense fallback={<InsightStream patterns={[]} loading={true} />}>
+            <RecentPatterns />
+        </Suspense>
       </div>
 
       {pendingCount > 0 && (

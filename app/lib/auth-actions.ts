@@ -4,7 +4,6 @@ import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import { getDb } from '@/lib/mongodb';
 import bcrypt from 'bcryptjs';
-import { redirect } from 'next/navigation';
  
 export async function authenticate(
   prevState: string | undefined,
@@ -33,8 +32,7 @@ export async function authenticate(
 }
 
 export async function logout() {
-  await signOut({ redirect: false });
-  redirect('/');
+  await signOut({ redirectTo: '/' });
 }
 
 export async function registerUser(

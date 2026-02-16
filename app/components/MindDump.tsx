@@ -53,7 +53,7 @@ interface ProcessedData {
 }
 
 export default function MindDump() {
-  const [step, setStep] = useState<'INPUT' | 'ANALYZING' | 'IMPORTANCE' | 'SAVED'>('INPUT')
+  const [step, setStep] = useState<'INPUT' | 'ANALYZING' | 'IMPORTANCE' | 'SAVING' | 'SAVED'>('INPUT')
   const [content, setContent] = useState('')
   const [processedData, setProcessedData] = useState<ProcessedData | null>(null)
   const [isListening, setIsListening] = useState(false)
@@ -128,13 +128,16 @@ export default function MindDump() {
   }
 
   const handleSave = async (importance: 'TODAY' | 'WEEK' | 'LATER' | 'NOT_IMPORTANT') => {
+    setStep('SAVING')
     await saveThought(content, importance, processedData?.processedContent || content, processedData?.tags || [])
-    setStep('SAVED')
     setTimeout(() => {
-      setContent('')
-      setProcessedData(null)
-      setStep('INPUT')
-    }, 2000)
+        setStep('SAVED')
+        setTimeout(() => {
+          setContent('')
+          setProcessedData(null)
+          setStep('INPUT')
+        }, 2000)
+    }, 1500)
   }
 
   return (
@@ -215,6 +218,32 @@ export default function MindDump() {
                             initial={{ x: '-100%' }}
                             animate={{ x: '100%' }}
                             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                            className="w-full h-full bg-brand-black"
+                        />
+                    </div>
+                </div>
+             </motion.div>
+        )}
+
+        {/* SAVING LOADER */}
+        {step === 'SAVING' && (
+             <motion.div
+                key="saving"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center gap-8 text-brand-black"
+             >
+                <div className="relative">
+                    <Activity className="w-16 h-16 animate-spin text-brand-black opacity-50" style={{ animationDuration: '3s' }} />
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.5em] animate-pulse text-brand-black">Synchronizing Thought</p>
+                    <div className="w-48 h-[1px] bg-brand-black/10 overflow-hidden">
+                        <motion.div 
+                            initial={{ x: '-100%' }}
+                            animate={{ x: '100%' }}
+                            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                             className="w-full h-full bg-brand-black"
                         />
                     </div>
