@@ -27,16 +27,26 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
-          
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) {
-              return {
-                  id: user._id.toString(),
-                  email: user.email,
-                  name: user.name,
-              };
+          try {
+            const user = await getUser(email);
+            if (!user) {
+                console.log('No user found with email:', email);
+                return null;
+            }
+            
+            const passwordsMatch = await bcrypt.compare(password, user.password);
+            if (passwordsMatch) {
+                return {
+                    id: user._id.toString(),
+                    email: user.email,
+                    name: user.name,
+                };
+            } else {
+                console.log('Password mismatch for user:', email);
+            }
+          } catch (e) {
+            console.error('Error during authorization:', e);
+            return null;
           }
         }
 
