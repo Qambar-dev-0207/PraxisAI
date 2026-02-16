@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion'
-import { Zap, Brain, ArrowRight, Compass, Network } from 'lucide-react'
+import { Zap, Brain, ArrowRight, Network, Mic, Database, Binary, Activity } from 'lucide-react'
 
 // Optimized Feature Data
 interface Feature {
@@ -14,89 +14,6 @@ interface Feature {
     light: boolean;
     visual: React.ReactNode;
 }
-
-const features: Feature[] = [
-  {
-    id: 1,
-    title: "Frictionless Ingestion",
-    subtitle: "SYSTEM 01",
-    description: "Capture raw chaos instantly. 400ms latency. Voice, text, or neural link. We structure the noise so you don't have to.",
-    icon: <Zap className="w-6 h-6" />,
-    light: true,
-    visual: (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-            <span className="text-[12rem] md:text-[16rem] font-display font-bold tracking-tighter text-black/5 select-none whitespace-nowrap">
-                0.04s
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-transparent h-full w-full animate-scan" />
-        </div>
-    )
-  },
-  {
-    id: 2,
-    title: "Neural Synthesis",
-    subtitle: "SYSTEM 02",
-    description: "AI runs in the background, weaving connections between isolated thoughts. It tells you how your past ideas fuel your current problems.",
-    icon: <Network className="w-6 h-6" />,
-    light: false,
-    visual: (
-        <div className="absolute inset-0 flex items-center justify-center">
-             <div className="grid grid-cols-4 gap-4 opacity-30">
-                {Array.from({ length: 16 }).map((_, i) => (
-                    <motion.div 
-                        key={i}
-                        initial={{ opacity: 0.2 }}
-                        animate={{ opacity: [0.2, 1, 0.2] }}
-                        transition={{ duration: 2, delay: i * 0.1, repeat: Infinity }}
-                        className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" 
-                    />
-                ))}
-             </div>
-             {/* Connecting Lines (Simulated) */}
-             <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none">
-                <path d="M100 100 L 200 200" stroke="white" strokeWidth="1" />
-                <path d="M200 200 L 300 100" stroke="white" strokeWidth="1" />
-             </svg>
-        </div>
-    )
-  },
-  {
-    id: 3,
-    title: "Active Recall",
-    subtitle: "SYSTEM 03",
-    description: "Don't just store; train. The system quizzes you on your own knowledge, turning passive archives into active reflexes.",
-    icon: <Brain className="w-6 h-6" />,
-    light: false,
-    visual: (
-        <div className="absolute inset-0 flex items-center justify-center opacity-20">
-             <div className="w-[120%] h-[120%] border-[0.5px] border-white/20 rounded-full animate-[spin_60s_linear_infinite]" />
-             <div className="absolute w-[80%] h-[80%] border-[0.5px] border-white/20 rounded-full animate-[spin_40s_linear_infinite_reverse]" />
-             <div className="absolute w-[40%] h-[40%] border-[0.5px] border-white/20 rounded-full border-dashed animate-[spin_20s_linear_infinite]" />
-        </div>
-    )
-  },
-  {
-    id: 4,
-    title: "The Navigator",
-    subtitle: "SYSTEM 04",
-    description: "Agency at scale. The system flags cognitive loops and suggests the next most high-leverage thought path. It doesn't just mirror; it guides.",
-    icon: <Compass className="w-6 h-6" />,
-    light: true,
-    visual: (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-50 overflow-hidden">
-             {/* Radar / Compass Animation */}
-             <div className="w-96 h-96 border border-black/5 rounded-full flex items-center justify-center relative">
-                 <div className="w-full h-[1px] bg-black/5 absolute" />
-                 <div className="h-full w-[1px] bg-black/5 absolute" />
-                 <div className="w-1/2 h-1/2 bg-gradient-to-tr from-transparent to-black/5 absolute top-0 right-0 rounded-tr-full origin-bottom-left animate-spin" style={{ animationDuration: '4s' }} />
-             </div>
-             <div className="absolute text-xs font-mono tracking-widest opacity-30 mt-32">
-                 CALCULATING TRAJECTORY...
-             </div>
-        </div>
-    )
-  }
-]
 
 function FeatureCard({ feature, isMobile }: { feature: Feature, isMobile: boolean }) {
     const x = useMotionValue(0)
@@ -197,11 +114,135 @@ function FeatureCard({ feature, isMobile }: { feature: Feature, isMobile: boolea
     )
 }
 
+const BinaryVisual = () => {
+    const [bits, setBits] = useState<number[]>([])
+    
+    useEffect(() => {
+        setBits(Array.from({ length: 64 }).map(() => Math.round(Math.random())))
+    }, [])
+
+    return (
+        <div className="absolute inset-0 flex items-center justify-center opacity-5 text-black">
+             <div className="font-mono text-[10px] grid grid-cols-8 gap-2 leading-none">
+                {bits.map((bit, i) => (
+                    <span key={i}>{bit}</span>
+                ))}
+             </div>
+        </div>
+    )
+}
+
+const features: Feature[] = [
+  {
+    id: 1,
+    title: "Smart Listening",
+    subtitle: "CAPTURE ENGINE",
+    description: "Whether you talk or type, the system instantly catches your raw thoughts. It records the context so you don't have to remember the details.",
+    icon: <Mic className="w-6 h-6" />,
+    light: true,
+    visual: (
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+            <span className="text-[12rem] md:text-[16rem] font-display font-bold tracking-tighter text-black/5 select-none whitespace-nowrap uppercase">
+                Voice
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-transparent h-full w-full animate-scan" />
+        </div>
+    )
+  },
+  {
+    id: 2,
+    title: "Digital Vault",
+    subtitle: "RAW MEMORY STORE",
+    description: "Your ideas are kept in a secure, chronological archive. It's like having a search engine for your own brain that never forgets a single entry.",
+    icon: <Database className="w-6 h-6" />,
+    light: false,
+    visual: (
+        <div className="absolute inset-0 flex items-center justify-center">
+             <div className="grid grid-cols-4 gap-4 opacity-20">
+                {Array.from({ length: 16 }).map((_, i) => (
+                    <motion.div 
+                        key={i}
+                        initial={{ opacity: 0.2 }}
+                        animate={{ opacity: [0.2, 1, 0.2] }}
+                        transition={{ duration: 2, delay: i * 0.1, repeat: Infinity }}
+                        className="w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_8px_#fbbf24]" 
+                    />
+                ))}
+             </div>
+        </div>
+    )
+  },
+  {
+    id: 3,
+    title: "Reading the Vibe",
+    subtitle: "SEMANTIC ENCODER",
+    description: "The system doesn't just look at words; it understands the core concept of your thoughts, turning messy notes into organized data.",
+    icon: <Binary className="w-6 h-6" />,
+    light: true,
+    visual: <BinaryVisual />
+  },
+  {
+    id: 4,
+    title: "Habit Spotting",
+    subtitle: "PATTERN ANALYZER",
+    description: "PathOS looks for habits in how you think. It notices recurring themes, contradictions, or long-term motifs in your daily entries.",
+    icon: <Network className="w-6 h-6" />,
+    light: false,
+    visual: (
+        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+             <div className="w-64 h-64 border border-white/20 rounded-full flex items-center justify-center relative">
+                <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                    className="absolute w-full h-full border-t-2 border-amber-500 rounded-full"
+                />
+                <Network className="w-12 h-12 text-white/40" />
+             </div>
+        </div>
+    )
+  },
+  {
+    id: 5,
+    title: "The Aha! Moment",
+    subtitle: "INSIGHT GENERATOR",
+    description: "It connects current problems to past solutions. It gives you the big-picture view of your life that's usually hidden in the noise.",
+    icon: <Zap className="w-6 h-6" />,
+    light: true,
+    visual: (
+        <div className="absolute inset-0 flex items-center justify-center bg-amber-50/30 overflow-hidden">
+             <div className="w-96 h-96 border border-amber-500/5 rounded-full flex items-center justify-center relative">
+                 <div className="w-1/2 h-1/2 bg-gradient-to-tr from-transparent to-amber-500/10 absolute top-0 right-0 rounded-tr-full origin-bottom-left animate-spin" style={{ animationDuration: '4s' }} />
+             </div>
+             <div className="absolute text-xs font-mono tracking-widest opacity-30 mt-32 text-amber-900">
+                 CONNECTING NODES...
+             </div>
+        </div>
+    )
+  },
+  {
+    id: 6,
+    title: "Memory Trainer",
+    subtitle: "COGNITIVE TRAINER",
+    description: "Through quick briefings and smart quizzes, the system trains you on your own knowledge—turning past notes into active skills.",
+    icon: <Brain className="w-6 h-6" />,
+    light: false,
+    visual: (
+        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+             <div className="w-[120%] h-[120%] border-[0.5px] border-white/20 rounded-full animate-[spin_60s_linear_infinite]" />
+             <div className="absolute w-[80%] h-[80%] border-[0.5px] border-white/20 rounded-full animate-[spin_40s_linear_infinite_reverse]" />
+             <div className="absolute w-[40%] h-[40%] border-[0.5px] border-white/20 rounded-full border-dashed animate-[spin_20s_linear_infinite]" />
+        </div>
+    )
+  }
+]
+
 export default function FeaturesGrid() {
   const targetRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const checkMobile = () => {
         const mobile = window.innerWidth < 768
         requestAnimationFrame(() => {
@@ -218,10 +259,10 @@ export default function FeaturesGrid() {
     offset: ["start start", "end end"]
   })
   
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"])
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"])
 
   return (
-    <section ref={targetRef} className={`relative bg-white ${isMobile ? 'h-auto py-24' : 'h-[300vh]'}`}>
+    <section ref={targetRef} className={`relative bg-white ${isMobile ? 'h-auto py-24' : 'h-[450vh]'}`}>
       <div className={`${isMobile ? 'relative h-auto' : 'sticky top-0 flex h-screen items-center overflow-hidden'}`}>
         
         {/* Background Grid */}
@@ -239,17 +280,19 @@ export default function FeaturesGrid() {
         </div>
 
         {/* Scrolling Container */}
-        <motion.div 
-            style={{ x: isMobile ? 0 : x }} 
-            className={`z-10 will-change-transform ${isMobile ? 'flex flex-col gap-8 px-6 mt-12' : 'flex gap-8 px-8 md:gap-16 md:px-32 items-center h-full'}`}
-        >
-          {features.map((feature) => (
-            <div key={feature.id} className={isMobile ? 'w-full' : ''}>
-                 <FeatureCard feature={feature} isMobile={isMobile} />
-            </div>
-          ))}
-          {!isMobile && <div className="w-[10vw]"></div>}
-        </motion.div>
+        {mounted && (
+            <motion.div 
+                style={{ x: isMobile ? 0 : x }} 
+                className={`z-10 will-change-transform ${isMobile ? 'flex flex-col gap-8 px-6 mt-12' : 'flex gap-8 px-8 md:gap-16 md:px-32 items-center h-full'}`}
+            >
+            {features.map((feature) => (
+                <div key={feature.id} className={isMobile ? 'w-full' : ''}>
+                    <FeatureCard feature={feature} isMobile={isMobile} />
+                </div>
+            ))}
+            {!isMobile && <div className="w-[10vw]"></div>}
+            </motion.div>
+        )}
         
         {/* Progress Bar - Desktop Only */}
         {!isMobile && (
