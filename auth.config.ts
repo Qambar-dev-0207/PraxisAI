@@ -4,6 +4,8 @@ export const authConfig = {
   pages: {
     signIn: '/login',
   },
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || 'fallback-secret-for-dev-only',
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;

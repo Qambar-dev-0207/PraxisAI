@@ -5,6 +5,8 @@ import { AuthError } from 'next-auth';
 import { getDb } from '@/lib/mongodb';
 import bcrypt from 'bcryptjs';
  
+import { redirect } from 'next/navigation';
+ 
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
@@ -13,12 +15,15 @@ export async function authenticate(
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
+    console.log('Attempting to sign in with email:', email);
+
     await signIn('credentials', {
       email,
       password,
-      redirectTo: '/dashboard',
+      redirect: false,
     });
   } catch (error) {
+    console.error('Sign in error in action:', error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
@@ -29,6 +34,9 @@ export async function authenticate(
     }
     throw error;
   }
+  
+  console.log('Sign in successful, redirecting...');
+  redirect('/dashboard');
 }
 
 export async function logout() {
