@@ -79,15 +79,15 @@ export async function saveThought(
         reviewDate = new Date()
     }
 
-    // 1. Generate Embedding
-    const embedding = await generateEmbedding(content) || []
-
-    // 2. Fetch Context (Last 50 thoughts)
-    const recentThoughts = await db.collection<Thought>('thoughts')
-      .find({ userId: user._id as ObjectId })
-      .sort({ createdAt: -1 })
-      .limit(50)
-      .toArray();
+    // 1 & 2. Generate Embedding and Fetch Context in parallel
+    const [embedding, recentThoughts] = await Promise.all([
+      generateEmbedding(content).then(res => res || []),
+      db.collection<Thought>('thoughts')
+        .find({ userId: user._id as ObjectId })
+        .sort({ createdAt: -1 })
+        .limit(50)
+        .toArray()
+    ]);
 
     // 3. Analyze Patterns
     const foundPatterns = await analyzePatterns(

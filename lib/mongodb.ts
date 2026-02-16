@@ -15,7 +15,10 @@ if (!uri) {
 
 // Use localhost only in development as fallback
 const mongoUri = uri || 'mongodb://localhost:27017';
-const options = {};
+const options = {
+  connectTimeoutMS: 10000, // 10 seconds
+  serverSelectionTimeoutMS: 10000, // 10 seconds
+};
 
 let client;
 let clientPromise: Promise<MongoClient>;
@@ -28,18 +31,20 @@ if (process.env.NODE_ENV === 'development') {
   };
 
   if (!globalWithMongo._mongoClientPromise) {
+    console.log('Initializing MongoDB connection (dev)...');
     client = new MongoClient(mongoUri, options);
     globalWithMongo._mongoClientPromise = client.connect().catch(err => {
-        console.error("MongoDB connection error (dev):", err);
+        console.error("CRITICAL: MongoDB connection error (dev):", err.message);
         throw err;
     });
   }
   clientPromise = globalWithMongo._mongoClientPromise;
 } else {
   // In production mode, it's best to not use a global variable.
+  console.log('Initializing MongoDB connection (prod)...');
   client = new MongoClient(mongoUri, options);
   clientPromise = client.connect().catch(err => {
-    console.error("MongoDB connection error (prod):", err);
+    console.error("CRITICAL: MongoDB connection error (prod):", err.message);
     throw err;
   });
 }
