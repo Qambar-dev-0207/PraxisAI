@@ -49,7 +49,9 @@ if (process.env.NODE_ENV === 'development') {
 export default clientPromise;
 
 export async function getDb() {
+
     const client = await clientPromise;
-    // Assuming the DB name is in the connection string, or default to 'clearmind'
-    return client.db('clearmind');
+
+    return client.db(); // This uses the database name from the URI
+
 }

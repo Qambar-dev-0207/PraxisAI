@@ -7,8 +7,10 @@ import { z } from 'zod';
 
 async function getUser(email: string) {
   try {
+    console.log('Fetching user from DB for email:', email);
     const db = await getDb();
     const user = await db.collection('users').findOne({ email });
+    if (user) console.log('User fetched successfully');
     return user;
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -18,6 +20,8 @@ async function getUser(email: string) {
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
+  trustHost: true,
+  secret: process.env.AUTH_SECRET,
   providers: [
     Credentials({
       async authorize(credentials) {
