@@ -1,18 +1,16 @@
 'use client'
 
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRef, useState, useEffect } from 'react'
+import { useRef } from 'react'
 import { 
-    Mail, Github, Linkedin, Twitter, Terminal, Cpu, Fingerprint, 
-    Share2, Activity, Shield, Zap, Database, Network, 
-    Code, Brackets, Binary, Radio, Workflow
+    Mail, Github, Linkedin, Twitter, Terminal, Fingerprint, 
+    Shield, Database, 
+    Code, Binary, Radio, Workflow
 } from 'lucide-react'
 import AuthDecor from '../components/AuthDecor'
 import NoiseOverlay from '../components/NoiseOverlay'
-import TextScramble from '../components/TextScramble'
-import GlitchText from '../components/GlitchText'
 import MagneticButton from '../components/MagneticButton'
 
 const SKILLS = [
@@ -29,8 +27,6 @@ export default function AboutPage() {
         target: containerRef,
         offset: ["start start", "end end"]
     })
-
-    const [activeSection, setActiveSection] = useState(0)
     
     // Header parallax
     const headerY = useTransform(scrollYProgress, [0, 0.2], [0, -50])
@@ -131,26 +127,24 @@ export default function AboutPage() {
                                     <span className="text-[10px] uppercase tracking-[0.6em] font-bold">Initializing Handshake...</span>
                                 </motion.div>
                                 
-                                <h1 className="text-7xl md:text-9xl font-display uppercase tracking-tighter leading-[0.8]">
-                                    <span className="block text-white">
-                                        <GlitchText text="Qambar" />
-                                    </span>
-                                    <span className="block text-transparent stroke-text opacity-40">
-                                        <GlitchText text="Syed" />
-                                    </span>
-                                </h1>
-                            </div>
+                            <h1 className="text-7xl md:text-9xl font-display uppercase tracking-tighter leading-[0.8]">
+                                <span className="block text-white">
+                                    Qambar
+                                </span>
+                                <span className="block text-amber-500 opacity-60">
+                                    Syed
+                                </span>
+                            </h1>
+                        </div>
 
-                            <div className="space-y-8 max-w-xl">
-                                <div className="p-8 border-l-2 border-amber-500/40 bg-white/[0.02] backdrop-blur-sm relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-[60px]" />
-                                    <p className="text-xl md:text-2xl leading-relaxed text-white/90 font-light">
-                                        <TextScramble>
-                                            Redefining human capability through autonomous silicon agents. 
-                                            Building at the intersection of Computer Vision, LLMs, and Spatial Computing.
-                                        </TextScramble>
-                                    </p>
-                                </div>
+                        <div className="space-y-8 max-w-xl">
+                            <div className="p-8 border-l-2 border-amber-500/40 bg-white/[0.02] backdrop-blur-sm relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-[60px]" />
+                                <p className="text-xl md:text-2xl leading-relaxed text-white/90 font-light">
+                                    Redefining human capability through autonomous silicon agents. 
+                                    Building at the intersection of Computer Vision, LLMs, and Spatial Computing.
+                                </p>
+                            </div>
                                 <div className="flex gap-12">
                                     <div className="space-y-2">
                                         <div className="text-[8px] text-white/30 uppercase tracking-[0.4em]">Current_Sector</div>
