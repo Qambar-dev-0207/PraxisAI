@@ -175,21 +175,21 @@ export default function LandingPage() {
                         <span className="font-mono text-xs">GLOBAL NODES</span>
                         <Globe className="w-4 h-4 " />
                         <span className="font-display text-xl">
-                            <Counter from={0} to={8402} />
+                            <Counter from={0} to={50} />+
                         </span>
                     </div>
                     <div className="flex items-center justify-end gap-4 border-b border-black/20 pb-2">
                         <span className="font-mono text-xs">NEURAL LINKS</span>
                         <Activity className="w-4 h-4 " />
                         <span className="font-display text-xl">
-                            <Counter from={0} to={1240} /> K
+                            <Counter from={0} to={240} /> K+
                         </span>
                     </div>
                     <div className="flex items-center justify-end gap-4 border-b border-black/20 pb-2">
                         <span className="font-mono text-xs">MEMORY BLOCKS</span>
                         <Layers className="w-4 h-4 " />
                         <span className="font-display text-xl">
-                            <Counter from={0} to={41} />.2 TB
+                            <Counter from={0} to={67} />.2 GB
                         </span>
                     </div>
                  </div>
