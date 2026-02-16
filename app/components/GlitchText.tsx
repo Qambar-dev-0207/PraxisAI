@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion } from 'framer-motion'
 
 const CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 interface GlitchTextProps {
   text: string
-  as?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  as?: React.ElementType<any>
   className?: string
   trigger?: boolean // External trigger
 }
@@ -48,12 +48,15 @@ export default function GlitchText({ text, as: Component = 'span', className, tr
     }
   }, [trigger, scramble])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Tag = Component as any
+  
   return (
-    <Component 
+    <Tag 
         className={`${className} inline-block`}
         onMouseEnter={scramble}
     >
       {displayText}
-    </Component>
+    </Tag>
   )
 }

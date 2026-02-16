@@ -6,17 +6,16 @@ const chars = '-_~`!@#$%^&*()+=[]{}|;:,.<>?'
 
 export default function TextScramble({ children, className, trigger = true }: { children: string, className?: string, trigger?: boolean }) {
   const [output, setOutput] = useState(children)
-  const [isScrambling, setIsScrambling] = useState(false)
-  const intervalRef = useRef<any>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (!trigger) return
 
     let iteration = 0
-    clearInterval(intervalRef.current)
+    if (intervalRef.current) clearInterval(intervalRef.current)
 
     intervalRef.current = setInterval(() => {
-      setOutput(prev => 
+      setOutput(
         children
           .split('')
           .map((letter, index) => {
@@ -29,13 +28,15 @@ export default function TextScramble({ children, className, trigger = true }: { 
       )
 
       if (iteration >= children.length) {
-        clearInterval(intervalRef.current)
+        if (intervalRef.current) clearInterval(intervalRef.current)
       }
 
       iteration += 1 / 3
     }, 30)
 
-    return () => clearInterval(intervalRef.current)
+    return () => {
+        if (intervalRef.current) clearInterval(intervalRef.current)
+    }
   }, [children, trigger])
 
   return <span className={className}>{output}</span>

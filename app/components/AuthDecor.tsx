@@ -3,9 +3,18 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
+interface Particle {
+  id: number;
+  initialX: number;
+  initialY: number;
+  duration: number;
+  delay: number;
+  targetY: number;
+}
+
 export default function AuthDecor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [particles, setParticles] = useState<any[]>([])
+  const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -13,16 +22,18 @@ export default function AuthDecor() {
     }
     window.addEventListener('mousemove', handleMouseMove)
     
-    // Generate particles on client side only
-    const newParticles = [...Array(20)].map((_, i) => ({
-        id: i,
-        initialX: Math.random() * window.innerWidth,
-        initialY: Math.random() * window.innerHeight,
-        duration: Math.random() * 5 + 5,
-        delay: Math.random() * 5,
-        targetY: Math.random() * -100
-    }))
-    setParticles(newParticles)
+    // Generate particles on client side only - use rAF to avoid synchronous state update warning
+    requestAnimationFrame(() => {
+        const newParticles = [...Array(20)].map((_, i) => ({
+            id: i,
+            initialX: Math.random() * window.innerWidth,
+            initialY: Math.random() * window.innerHeight,
+            duration: Math.random() * 5 + 5,
+            delay: Math.random() * 5,
+            targetY: Math.random() * -100
+        }))
+        setParticles(newParticles)
+    })
 
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])

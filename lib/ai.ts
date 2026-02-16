@@ -22,13 +22,21 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
   }
 }
 
+interface OpenRouterResponse {
+  choices: {
+    message: {
+      content: string;
+    };
+  }[];
+}
+
 export async function analyzePatterns(newContent: string, pastContext: { content: string, date: Date }[]) {
   if (!process.env.OPENROUTER_API_KEY) return [];
 
   try {
     const contextString = pastContext.map(t => `- [${t.date.toISOString().split('T')[0]}] ${t.content}`).join('\n');
     
-    const stream = await openrouter.chat.send({
+    const response = await openrouter.chat.send({
       model: "gpt-oss-120b",
       messages: [
         {
@@ -56,10 +64,9 @@ export async function analyzePatterns(newContent: string, pastContext: { content
           content: `PAST THOUGHTS:\n${contextString}\n\nNEW THOUGHT:\n${newContent}`
         }
       ],
-    });
+    }) as unknown as OpenRouterResponse;
 
-    const result = stream as any;
-    const text = result.choices[0]?.message?.content;
+    const text = response.choices[0]?.message?.content;
     if (!text) return [];
 
     const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -80,7 +87,7 @@ export async function analyzeThought(content: string) {
 
   try {
     // Using a reliable model from OpenRouter
-    const stream = await openrouter.chat.send({
+    const response = await openrouter.chat.send({
       model: "gpt-oss-120b",
       messages: [
         {
@@ -95,12 +102,9 @@ export async function analyzeThought(content: string) {
           content: content
         }
       ],
-    });
+    }) as unknown as OpenRouterResponse;
 
-    // The SDK's send method returns the full response if stream is not true (default behavior usually)
-    // However, let's handle the response structure based on common SDK patterns
-    const result = stream as any;
-    const text = result.choices[0]?.message?.content;
+    const text = response.choices[0]?.message?.content;
 
     if (!text) return null;
 

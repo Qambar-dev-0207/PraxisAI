@@ -3,24 +3,69 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { saveThought, analyzeInput } from '../actions'
-import { ArrowRight, Clock, Calendar, AlertCircle, CheckCircle, Mic, MicOff, Sparkles, Activity, Terminal } from 'lucide-react'
+import { ArrowRight, CheckCircle, Mic, MicOff, Sparkles, Activity, Terminal } from 'lucide-react'
 
-const SpeechRecognition = typeof window !== 'undefined' && ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
+// Define types for Web Speech API
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: {
+    [key: number]: {
+      [key: number]: {
+        transcript: string;
+      };
+      isFinal: boolean;
+      length: number;
+    };
+    length: number;
+  };
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: () => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  onend: () => void;
+  start: () => void;
+  stop: () => void;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: new () => SpeechRecognitionInstance;
+    webkitSpeechRecognition?: new () => SpeechRecognitionInstance;
+  }
+}
+
+const SpeechRecognitionConstructor = typeof window !== 'undefined' && 
+  (window.SpeechRecognition || window.webkitSpeechRecognition)
+
+interface ProcessedData {
+  processedContent: string;
+  tags: string[];
+  suggestedImportance: 'TODAY' | 'WEEK' | 'LATER' | 'NOT_IMPORTANT';
+}
 
 export default function MindDump() {
   const [step, setStep] = useState<'INPUT' | 'ANALYZING' | 'IMPORTANCE' | 'SAVED'>('INPUT')
   const [content, setContent] = useState('')
-  const [processedData, setProcessedData] = useState<any>(null)
+  const [processedData, setProcessedData] = useState<ProcessedData | null>(null)
   const [isListening, setIsListening] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
 
   useEffect(() => {
     if (step === 'INPUT' && !isListening) {
       inputRef.current?.focus()
       // Initialize Web Speech API
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition()
+      if (SpeechRecognitionConstructor) {
+        const recognition = new SpeechRecognitionConstructor() as SpeechRecognitionInstance
         recognition.continuous = true
         recognition.interimResults = true
         recognition.lang = 'en-US'
@@ -29,19 +74,16 @@ export default function MindDump() {
           setIsListening(true)
         }
         
-        recognition.onresult = (event: any) => {
-          let interimTranscript = ''
+        recognition.onresult = (event: SpeechRecognitionEvent) => {
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcript = event.results[i][0].transcript
             if (event.results[i].isFinal) {
               setContent(prev => prev + (prev && !prev.endsWith(' ') ? ' ' : '') + transcript)
-            } else {
-              interimTranscript += transcript
             }
           }
         }
         
-        recognition.onerror = (event: any) => {
+        recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
           console.error('Speech recognition error:', event.error)
           if (event.error !== 'no-speech') {
             alert(`Microphone error: ${event.error}`)
@@ -58,7 +100,7 @@ export default function MindDump() {
   }, [step, isListening])
 
   const startListening = () => {
-    if (!SpeechRecognition) {
+    if (!SpeechRecognitionConstructor) {
       alert('Speech recognition is not supported in your browser.')
       return
     }
@@ -79,12 +121,13 @@ export default function MindDump() {
         setProcessedData(result)
         setStep('IMPORTANCE')
       } catch (err) {
+        console.error('Analysis failed:', err)
         setStep('INPUT')
       }
     }
   }
 
-  const handleSave = async (importance: string) => {
+  const handleSave = async (importance: 'TODAY' | 'WEEK' | 'LATER' | 'NOT_IMPORTANT') => {
     await saveThought(content, importance, processedData?.processedContent || content, processedData?.tags || [])
     setStep('SAVED')
     setTimeout(() => {
@@ -268,7 +311,14 @@ export default function MindDump() {
   )
 }
 
-function ImportanceBtn({ label, sub, onClick, suggested }: any) {
+interface ImportanceBtnProps {
+  label: string;
+  sub: string;
+  onClick: () => void;
+  suggested: boolean;
+}
+
+function ImportanceBtn({ label, sub, onClick, suggested }: ImportanceBtnProps) {
   return (
     <button
       onClick={onClick}

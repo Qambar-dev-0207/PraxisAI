@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { registerUser } from '@/app/lib/auth-actions';
 import Link from 'next/link';
-import { ArrowRight, AlertCircle, Database, Server } from 'lucide-react';
+import { ArrowRight, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import AuthDecor from '../components/AuthDecor';
 

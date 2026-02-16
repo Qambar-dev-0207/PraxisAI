@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Activity, AlertTriangle, Repeat, Network, ChevronDown, CheckSquare } from 'lucide-react'
+import { Pattern } from '../../lib/types'
 
 interface InsightStreamProps {
-  patterns: any[]
+  patterns: Pattern[]
 }
 
 export default function InsightStream({ patterns }: InsightStreamProps) {
@@ -13,7 +14,7 @@ export default function InsightStream({ patterns }: InsightStreamProps) {
 
   if (!patterns || patterns.length === 0) return null
 
-  const getIcon = (type: string) => {
+  const getIcon = (type: string | undefined) => {
     switch (type?.toUpperCase()) {
       case 'RECURRENCE': return <Repeat className="w-4 h-4 text-brand-black" />
       case 'CONTRADICTION': return <AlertTriangle className="w-4 h-4 text-brand-black" />
@@ -22,7 +23,8 @@ export default function InsightStream({ patterns }: InsightStreamProps) {
     }
   }
 
-  const toggleExpand = (id: string) => {
+  const toggleExpand = (id: string | undefined) => {
+    if (!id) return
     setExpandedId(expandedId === id ? null : id)
   }
 
@@ -53,7 +55,7 @@ export default function InsightStream({ patterns }: InsightStreamProps) {
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-2 bg-black/5 rounded-lg group-hover:bg-black/10 transition-colors">
-                    {getIcon(pattern.insights[0]?.type || 'GENERIC')}
+                    {getIcon(pattern.insights?.[0]?.type || 'GENERIC')}
                   </div>
                   <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest" suppressHydrationWarning>
                     {new Date(pattern.createdAt).toLocaleDateString()}

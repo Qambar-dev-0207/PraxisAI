@@ -13,7 +13,9 @@ export default function CustomCursor() {
     // Disable cursor on mobile/touch devices
     const isTouchDevice = () => window.matchMedia('(pointer: coarse)').matches
     if (isTouchDevice()) {
-      setIsMobile(true)
+      requestAnimationFrame(() => {
+        setIsMobile(true)
+      })
       return
     }
 

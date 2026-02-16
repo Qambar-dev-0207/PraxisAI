@@ -2,10 +2,20 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion'
-import { Zap, Shield, Brain, Repeat, ArrowRight, Terminal, Lock, Activity, Compass, Network } from 'lucide-react'
+import { Zap, Brain, ArrowRight, Compass, Network } from 'lucide-react'
 
 // Optimized Feature Data
-const features = [
+interface Feature {
+    id: number;
+    title: string;
+    subtitle: string;
+    description: string;
+    icon: React.ReactNode;
+    light: boolean;
+    visual: React.ReactNode;
+}
+
+const features: Feature[] = [
   {
     id: 1,
     title: "Frictionless Ingestion",
@@ -88,7 +98,7 @@ const features = [
   }
 ]
 
-function FeatureCard({ feature, isMobile }: { feature: any, isMobile: boolean }) {
+function FeatureCard({ feature, isMobile }: { feature: Feature, isMobile: boolean }) {
     const x = useMotionValue(0)
     const y = useMotionValue(0)
     
@@ -175,7 +185,7 @@ function FeatureCard({ feature, isMobile }: { feature: any, isMobile: boolean })
                 {/* Action Area */}
                 <div className="flex justify-between items-end">
                      <div className={`font-mono text-[10px] ${subTextColor} opacity-50`}>
-                        // READY
+                        {`// READY`}
                      </div>
                      <div className={`w-14 h-14 rounded-full border ${borderColor} flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 cursor-pointer`}>
                         <ArrowRight className="w-5 h-5 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
@@ -192,7 +202,12 @@ export default function FeaturesGrid() {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    const checkMobile = () => {
+        const mobile = window.innerWidth < 768
+        requestAnimationFrame(() => {
+            setIsMobile(mobile)
+        })
+    }
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)

@@ -2,7 +2,7 @@ import MindDump from '../components/MindDump'
 import InsightStream from '../components/InsightStream'
 import { getPendingCount, getRecentPatterns } from '../actions'
 import Link from 'next/link'
-import { ArrowRight, User, Terminal, LogOut } from 'lucide-react'
+import { ArrowRight, Terminal, LogOut } from 'lucide-react'
 import { auth } from '@/auth'
 import { logout } from '@/app/lib/auth-actions'
 

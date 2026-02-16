@@ -20,12 +20,16 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
   // Detect mobile on mount
   useEffect(() => {
     const isMobileDevice = window.matchMedia('(max-width: 768px)').matches
-    setIsMobile(isMobileDevice)
+    requestAnimationFrame(() => {
+      setIsMobile(isMobileDevice)
+    })
   }, [])
 
   // Reset state when path changes (navigation complete)
   useEffect(() => {
-    setIsTransitioning(false)
+    requestAnimationFrame(() => {
+      setIsTransitioning(false)
+    })
   }, [pathname])
 
   const startTransition = async (href: string) => {

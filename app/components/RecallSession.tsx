@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { processRecallItem } from '../actions'
-import { Check, Clock, X } from 'lucide-react'
+import { Check, Clock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Thought } from '../../lib/types'
 
 interface RecallSessionProps {
-  items: any[]
+  items: Thought[]
 }
 
 export default function RecallSession({ items }: RecallSessionProps) {
@@ -17,7 +18,7 @@ export default function RecallSession({ items }: RecallSessionProps) {
   const currentItem = items[currentIndex]
 
   const handleAction = async (action: 'KEEP' | 'DONE') => {
-    if (!currentItem) return
+    if (!currentItem || !currentItem.id) return
 
     await processRecallItem(currentItem.id, action)
 
@@ -51,7 +52,7 @@ export default function RecallSession({ items }: RecallSessionProps) {
           {/* INSIGHT DISPLAY */}
           {currentItem.patterns && currentItem.patterns.length > 0 && (
             <div className="mb-12 mx-auto max-w-lg">
-                {currentItem.patterns.map((pattern: any) => (
+                {currentItem.patterns.map((pattern) => (
                     <div key={pattern.id} className="bg-brand-black/5 border border-brand-black/10 p-6 rounded-xl text-left backdrop-blur-sm">
                         <div className="flex items-center gap-2 mb-2">
                              <div className="w-1.5 h-1.5 rounded-full bg-brand-black animate-pulse" />
@@ -61,7 +62,7 @@ export default function RecallSession({ items }: RecallSessionProps) {
                         </div>
                         <h4 className="font-display uppercase tracking-wider text-lg mb-2">{pattern.title}</h4>
                         <p className="font-mono text-xs leading-relaxed opacity-70">
-                            {pattern.insights[0]?.content || pattern.description}
+                            {pattern.insights && pattern.insights[0]?.content ? pattern.insights[0].content : pattern.description}
                         </p>
                     </div>
                 ))}
