@@ -152,15 +152,17 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
                 cx="32"
                 cy="32"
                 r="24"
-                strokeWidth="0.5"
-                opacity="0.3"
+                initial={{ scale: 1 }}
                 animate={{
-                  r: [24, 32, 24],
+                  scale: [1, 1.25, 1],
                 }}
                 transition={{
                   duration: 3,
                   repeat: Infinity,
                 }}
+                strokeWidth="0.5"
+                opacity="0.3"
+                style={{ originX: "32px", originY: "32px" }}
               />
             </svg>
           </motion.div>
