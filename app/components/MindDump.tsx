@@ -154,7 +154,7 @@ export default function MindDump() {
             <div className="flex justify-between items-center mb-12">
                 <div className="flex items-center gap-4">
                     <div className="w-2 h-2 rounded-full bg-brand-black animate-pulse" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">Active Interface // Quick Ingest</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">Quick Capture</span>
                 </div>
                 
                 <div className="flex items-center gap-3">
@@ -164,7 +164,7 @@ export default function MindDump() {
                         className={`group flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-500 ${isFocusMode ? 'bg-amber-500 text-black border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-transparent text-brand-black/40 border-brand-black/10 hover:border-brand-black hover:text-brand-black'}`}
                     >
                         <span className="font-mono text-[10px] uppercase tracking-widest">
-                            {isFocusMode ? 'Focus Active' : 'Neural Entrainment'}
+                            {isFocusMode ? 'Music Playing' : 'Focus Music'}
                         </span>
                         {isFocusMode ? <Zap className="w-3 h-3 animate-pulse" /> : <ZapOff className="w-3 h-3" />}
                     </button>
@@ -188,22 +188,22 @@ export default function MindDump() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full bg-transparent text-4xl md:text-6xl font-display uppercase tracking-tighter text-brand-black border-b border-brand-black/10 focus:border-brand-black outline-none pb-8 transition-all duration-700 placeholder:text-brand-black/5 pr-16"
-                  placeholder={isListening ? "RECORDING..." : "ENTER THOUGHT"}
+                  className="w-full bg-transparent text-3xl md:text-6xl font-display uppercase tracking-tighter text-brand-black border-b border-brand-black/10 focus:border-brand-black outline-none pb-6 md:pb-8 transition-all duration-700 placeholder:text-brand-black/5 pr-12 md:pr-16"
+                  placeholder={isListening ? "LISTENING..." : "WHAT'S ON YOUR MIND?"}
                   disabled={isListening}
                 />
-                <div className="absolute right-0 bottom-8">
-                     <ArrowRight className={`w-8 h-8 transition-all duration-500 ${content.trim() ? 'opacity-100 translate-x-0 text-brand-black' : 'opacity-0 -translate-x-4 text-brand-black/20'}`} />
+                <div className="absolute right-0 bottom-6 md:bottom-8">
+                     <ArrowRight className={`w-6 h-6 md:w-8 md:h-8 transition-all duration-500 ${content.trim() ? 'opacity-100 translate-x-0 text-brand-black' : 'opacity-0 -translate-x-4 text-brand-black/20'}`} />
                 </div>
             </div>
             
             <div className="mt-8 flex justify-between items-center opacity-30">
                  <div className="flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase text-brand-black">
                     <Terminal className="w-3 h-3" />
-                    <span>Press Enter to Synthesize</span>
+                    <span>Press Enter to Save</span>
                  </div>
                  <div className="font-mono text-[10px] tracking-widest uppercase text-brand-black">
-                    SYSTEM_READY_1.0
+                    AI Ready
                  </div>
             </div>
           </motion.div>
@@ -223,7 +223,7 @@ export default function MindDump() {
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent via-brand-black/10 to-transparent animate-scan" />
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.5em] animate-pulse text-brand-black">Neural Synthesis in Progress</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.5em] animate-pulse text-brand-black">AI is analyzing your thought...</p>
                     <div className="w-48 h-[1px] bg-brand-black/10 overflow-hidden">
                         <motion.div 
                             initial={{ x: '-100%' }}
@@ -249,7 +249,7 @@ export default function MindDump() {
                     <Activity className="w-16 h-16 animate-spin text-brand-black opacity-50" style={{ animationDuration: '3s' }} />
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.5em] animate-pulse text-brand-black">Synchronizing Thought</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.5em] animate-pulse text-brand-black">Saving...</p>
                     <div className="w-48 h-[1px] bg-brand-black/10 overflow-hidden">
                         <motion.div 
                             initial={{ x: '-100%' }}
@@ -280,7 +280,7 @@ export default function MindDump() {
                         
                         <div className="flex items-center gap-3 mb-8">
                             <Sparkles className="w-4 h-4 text-brand-black" />
-                            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">AI Synthesized Insight</span>
+                            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">AI Summary</span>
                         </div>
 
                         <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tighter text-brand-black leading-tight mb-8">
@@ -301,10 +301,10 @@ export default function MindDump() {
                         <div className="p-6 border border-black/5 bg-white rounded-3xl space-y-3">
                              <div className="flex items-center gap-2 text-black/40">
                                 <BookOpen className="w-3 h-3" />
-                                <span className="font-mono text-[9px] uppercase tracking-widest">Linguistic Upgrade</span>
+                                <span className="font-mono text-[9px] uppercase tracking-widest">Writing Tip</span>
                              </div>
                              <p className="font-mono text-[11px] leading-relaxed italic text-black/80">
-                                &quot;{processedData.linguisticPrecision || "Expression efficiency verified."}&quot;
+                                &quot;{processedData.linguisticPrecision || "Your thought is clear and concise."}&quot;
                              </p>
                         </div>
 
@@ -312,7 +312,7 @@ export default function MindDump() {
                         <div className="p-6 border border-black/5 bg-white rounded-3xl space-y-4">
                              <div className="flex items-center gap-2 text-black/40">
                                 <Layers className="w-3 h-3" />
-                                <span className="font-mono text-[9px] uppercase tracking-widest">Simulated Perspectives</span>
+                                <span className="font-mono text-[9px] uppercase tracking-widest">Different Perspectives</span>
                              </div>
                              <div className="space-y-3">
                                 {processedData.perspectiveShifts?.map((shift, i) => (
@@ -330,7 +330,7 @@ export default function MindDump() {
             )}
 
             <div className="text-center mb-12">
-                 <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-brand-black/40">Select Trajectory</span>
+                 <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-brand-black/40">When should we review this?</span>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
@@ -374,8 +374,8 @@ export default function MindDump() {
             <div className="w-24 h-24 rounded-full border border-brand-black text-brand-black flex items-center justify-center mb-8 bg-brand-black/5">
                 <CheckCircle className="w-12 h-12 stroke-[1px]" />
             </div>
-            <h3 className="text-4xl font-display uppercase tracking-widest">Thought Archived</h3>
-            <p className="font-mono text-[10px] uppercase tracking-widest mt-4 opacity-40">System Resetting...</p>
+            <h3 className="text-4xl font-display uppercase tracking-widest">Thought Saved!</h3>
+            <p className="font-mono text-[10px] uppercase tracking-widest mt-4 opacity-40">Ready for the next one...</p>
           </motion.div>
         )}
 
@@ -395,7 +395,7 @@ function ImportanceBtn({ label, sub, onClick, suggested }: ImportanceBtnProps) {
   return (
     <button
       onClick={onClick}
-      className={`relative group flex flex-col items-center justify-center p-8 border rounded-[1.5rem] transition-all duration-500 overflow-hidden ${suggested ? 'border-brand-black bg-brand-black text-brand-white shadow-lg scale-105' : 'border-brand-black/10 hover:border-brand-black/50 bg-brand-white text-brand-black'}`}
+      className={`relative group flex flex-col items-center justify-center p-4 md:p-8 border rounded-[1.2rem] md:rounded-[1.5rem] transition-all duration-500 overflow-hidden ${suggested ? 'border-brand-black bg-brand-black text-brand-white shadow-lg scale-105' : 'border-brand-black/10 hover:border-brand-black/50 bg-brand-white text-brand-black'}`}
     >
       {/* Corner Brackets */}
       <div className="absolute top-3 left-3 w-2 h-2 border-t border-l border-current opacity-20" />
@@ -408,8 +408,8 @@ function ImportanceBtn({ label, sub, onClick, suggested }: ImportanceBtnProps) {
           </div>
       )}
       
-      <span className="text-2xl font-display uppercase tracking-tighter mb-1">{label}</span>
-      <span className="text-[9px] font-mono uppercase tracking-[0.2em] opacity-40 group-hover:opacity-100 transition-opacity">{sub}</span>
+      <span className="text-xl md:text-2xl font-display uppercase tracking-tighter mb-1">{label}</span>
+      <span className="text-[8px] md:text-[9px] font-mono uppercase tracking-[0.2em] opacity-40 group-hover:opacity-100 transition-opacity">{sub}</span>
     </button>
   )
 }

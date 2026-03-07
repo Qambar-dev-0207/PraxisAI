@@ -55,7 +55,7 @@ export default function RecallSession({ items }: RecallSessionProps) {
       <div className="absolute top-0 w-full flex flex-col items-center gap-2 mb-12">
           <div className="flex items-center gap-2">
               <Brain className="w-4 h-4 text-amber-500" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-black/40">Neural Integration Progress</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-black/40">Memory Progress</span>
           </div>
           <div className="w-64 h-1 bg-black/5 rounded-full overflow-hidden relative">
               <motion.div 
@@ -64,7 +64,7 @@ export default function RecallSession({ items }: RecallSessionProps) {
                 className="absolute top-0 left-0 h-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
               />
           </div>
-          <span className="font-mono text-[9px] text-amber-600/60 uppercase">{masteryPercentage}% Synaptic Strength</span>
+          <span className="font-mono text-[9px] text-amber-600/60 uppercase">{masteryPercentage}% Memory Strength</span>
       </div>
 
       <AnimatePresence mode="wait">
@@ -79,12 +79,12 @@ export default function RecallSession({ items }: RecallSessionProps) {
             <div className="mb-6 inline-flex items-center gap-3 px-3 py-1 border border-black/5 bg-black/[0.02] rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                 <span className="font-mono text-[9px] uppercase tracking-widest text-black/50" suppressHydrationWarning>
-                    Timestamp: {new Date(currentItem.createdAt).toLocaleDateString()} // Vector: {currentIndex + 1}/{items.length}
+                    Saved: {new Date(currentItem.createdAt).toLocaleDateString()} // Item: {currentIndex + 1}/{items.length}
                 </span>
             </div>
             
-            <div className="relative min-h-[160px] flex items-center justify-center px-4">
-                <h2 className="text-4xl md:text-6xl font-display font-bold text-black leading-tight max-w-3xl">
+            <div className="relative min-h-[120px] md:min-h-[160px] flex items-center justify-center px-4">
+                <h2 className="text-2xl md:text-6xl font-display font-bold text-black leading-tight max-w-3xl">
                     {isRevealed ? (
                         <TextScramble trigger={isDecrypting}>{currentItem.content}</TextScramble>
                     ) : (
@@ -100,7 +100,7 @@ export default function RecallSession({ items }: RecallSessionProps) {
                     className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-black/40 hover:text-amber-600 transition-colors group"
                 >
                     {isRevealed ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                    {isRevealed ? 'Hide Source' : 'Reveal Neural Source'}
+                    {isRevealed ? 'Hide Source' : 'Show Original Thought'}
                 </button>
             </div>
           </div>
@@ -130,41 +130,41 @@ export default function RecallSession({ items }: RecallSessionProps) {
                   ))
               ) : (
                 <div className="md:col-span-2 text-center p-8 border border-dashed border-black/10 rounded-lg">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-black/30">No linked cognitive patterns detected</span>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-black/30">No linked thoughts found</span>
                 </div>
               )}
           </div>
 
           {/* ACTIONS */}
-          <div className="flex flex-wrap items-center justify-center gap-4 w-full px-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 w-full px-4">
             <button
               onClick={() => handleAction('INTEGRATED')}
-              className="flex items-center gap-3 px-8 py-5 bg-black text-white hover:bg-amber-500 hover:text-black transition-all duration-300 group min-w-[200px]"
+              className="flex items-center gap-3 px-6 md:px-8 py-4 md:py-5 bg-black text-white hover:bg-amber-500 hover:text-black transition-all duration-300 group min-w-[160px] md:min-w-[200px]"
             >
-              <ShieldCheck className="w-5 h-5" />
+              <ShieldCheck className="w-4 h-4 md:w-5 md:h-5" />
               <div className="text-left">
-                <span className="block font-display tracking-widest text-sm uppercase font-bold leading-none">Integrated</span>
-                <span className="font-mono text-[8px] uppercase opacity-50 tracking-tighter mt-1 group-hover:opacity-100">+20% Synaptic Strength</span>
+                <span className="block font-display tracking-widest text-xs md:text-sm uppercase font-bold leading-none">Remembered</span>
+                <span className="font-mono text-[7px] md:text-[8px] uppercase opacity-50 tracking-tighter mt-1 group-hover:opacity-100">+20% Memory</span>
               </div>
             </button>
 
             <button
               onClick={() => handleAction('DONE')}
-              className="flex items-center gap-3 px-8 py-5 border border-black/10 hover:border-black transition-all duration-300 min-w-[200px] bg-white"
+              className="flex items-center gap-3 px-6 md:px-8 py-4 md:py-5 border border-black/10 hover:border-black transition-all duration-300 min-w-[160px] md:min-w-[200px] bg-white"
             >
-              <Check className="w-5 h-5" />
+              <Check className="w-4 h-4 md:w-5 md:h-5" />
               <div className="text-left">
-                <span className="block font-display tracking-widest text-sm uppercase font-bold leading-none">Recalled</span>
-                <span className="font-mono text-[8px] uppercase opacity-50 tracking-tighter mt-1">+10% Mastery</span>
+                <span className="block font-display tracking-widest text-xs md:text-sm uppercase font-bold leading-none">Reviewed</span>
+                <span className="font-mono text-[7px] md:text-[8px] uppercase opacity-50 tracking-tighter mt-1">+10% Progress</span>
               </div>
             </button>
 
             <button
               onClick={() => handleAction('SNOOZE')}
-              className="flex items-center gap-3 px-8 py-5 border border-black/10 hover:text-amber-600 hover:border-amber-600 transition-all duration-300 min-w-[160px] bg-white group"
+              className="flex items-center gap-3 px-6 md:px-8 py-4 md:py-5 border border-black/10 hover:text-amber-600 hover:border-amber-600 transition-all duration-300 min-w-[140px] md:min-w-[160px] bg-white group"
             >
-              <Clock className="w-4 h-4" />
-              <span className="font-display tracking-widest text-sm uppercase font-bold group-hover:translate-x-1 transition-transform">Snooze</span>
+              <Clock className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="font-display tracking-widest text-xs md:text-sm uppercase font-bold group-hover:translate-x-1 transition-transform">Snooze</span>
             </button>
           </div>
 

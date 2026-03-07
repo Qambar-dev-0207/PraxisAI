@@ -102,7 +102,7 @@ export default function LandingPage() {
       <header className="fixed top-0 left-0 w-full p-8 z-50 flex justify-between items-start text-black">
         <div className="flex flex-col gap-1">
             <h3 className="font-mono text-xs uppercase tracking-widest opacity-60">
-               <GlitchText text="Architect" />
+               <GlitchText text="Creator" />
             </h3>
             <p className="font-display text-xl tracking-wide">Qambar</p>
         </div>
@@ -110,7 +110,7 @@ export default function LandingPage() {
         <div className="flex flex-col items-end gap-1 text-right">
              <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></div>
-                <span className="font-mono text-xs uppercase tracking-widest opacity-60">System Online</span>
+                <span className="font-mono text-xs uppercase tracking-widest opacity-60">App Active</span>
              </div>
              <p className="font-mono text-[10px] opacity-40">V 1.0.0</p>
         </div>
@@ -149,7 +149,7 @@ export default function LandingPage() {
                     >
                         <p className="font-mono text-xs md:text-sm max-w-xs leading-relaxed opacity-70 uppercase tracking-wide text-black">
                             <TextScramble trigger={true}>
-                                We don&apos;t just store memory; we optimize it. From passive archive to active cognitive navigation.
+                                An AI-powered journal that doesn't just store your thoughts, but helps you understand them.
                             </TextScramble>
                         </p>
 
@@ -158,7 +158,7 @@ export default function LandingPage() {
                             href="/dashboard"
                             className="group relative flex items-center gap-4 text-xl font-display uppercase tracking-wider text-white bg-black/90 backdrop-blur-md px-6 py-3 rounded-full border border-black/5 hover:bg-amber-500 hover:border-amber-500 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]"
                             >
-                                <span>Initialize</span>
+                                <span>Get Started</span>
                                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                                     <ArrowRight className="w-4 h-4 text-black -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
                                 </div>
@@ -172,21 +172,21 @@ export default function LandingPage() {
             <motion.div style={{ y: y2 }} className="hidden md:flex col-span-6 flex-col justify-end h-full min-h-[50vh] pb-12 items-end opacity-60 text-black pointer-events-none">
                  <div className="space-y-4 text-right">
                     <div className="flex items-center justify-end gap-4 border-b border-black/20 pb-2">
-                        <span className="font-mono text-xs">GLOBAL NODES</span>
+                        <span className="font-mono text-xs">ACTIVE USERS</span>
                         <Globe className="w-4 h-4 " />
                         <span className="font-display text-xl">
                             <Counter from={0} to={50} />+
                         </span>
                     </div>
                     <div className="flex items-center justify-end gap-4 border-b border-black/20 pb-2">
-                        <span className="font-mono text-xs">NEURAL LINKS</span>
+                        <span className="font-mono text-xs">INSIGHTS FOUND</span>
                         <Activity className="w-4 h-4 " />
                         <span className="font-display text-xl">
                             <Counter from={0} to={240} /> K+
                         </span>
                     </div>
                     <div className="flex items-center justify-end gap-4 border-b border-black/20 pb-2">
-                        <span className="font-mono text-xs">MEMORY BLOCKS</span>
+                        <span className="font-mono text-xs">DATA SECURED</span>
                         <Layers className="w-4 h-4 " />
                         <span className="font-display text-xl">
                             <Counter from={0} to={67} />.2 GB
@@ -211,7 +211,7 @@ export default function LandingPage() {
             </div>
             <div className="text-right">
                 <h4 className="font-mono text-[10px] uppercase opacity-40 mb-1">Mission</h4>
-                <p className="font-display text-lg">Augment Intelligence</p>
+                <p className="font-display text-lg">Clear Your Mind</p>
             </div>
         </motion.div>
       </div>

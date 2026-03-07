@@ -17,23 +17,23 @@ export default function ContactSection() {
                 {/* Text Side */}
                 <div className="space-y-8">
                     <h2 className="text-6xl md:text-8xl font-display uppercase tracking-tighter leading-none">
-                        Initiate<br/>Protocol
+                        Get in<br/>Touch
                     </h2>
                     <p className="font-mono text-gray-400 max-w-md leading-relaxed">
-                        Ready to integrate? Join the network. We are archiving the collective consciousness, one thought at a time.
+                        Have questions or want to learn more? Reach out to us. We&apos;re helping people clear their minds, one thought at a time.
                     </p>
                     
                     <div className="flex gap-6 pt-4 border-t border-white/10">
                         <a href="https://x.com/__Qambar__" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-white text-gray-500 transition-colors">
-                            <Twitter className="w-4 h-4" /> @__Qambar__
+                            <Twitter className="w-4 h-4" /> Twitter
                         </a>
                         <a href="https://github.com/Qambar-dev-0207" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-white text-gray-500 transition-colors">
-                            <Github className="w-4 h-4" /> /Qambar-dev-0207
+                            <Github className="w-4 h-4" /> GitHub
                         </a>
                     </div>
                 </div>
 
-                {/* Form Side (Stylized as a terminal input) */}
+                {/* Form Side (Stylized as an input) */}
                 <motion.div 
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -42,16 +42,16 @@ export default function ContactSection() {
                 >
                     <form className="space-y-8">
                         <div className="space-y-2 group">
-                            <label className="font-mono text-xs uppercase tracking-widest text-gray-500 group-focus-within:text-white transition-colors">Identity</label>
-                            <input type="text" placeholder="Designation / Name" className="w-full bg-transparent border-b border-white/20 py-4 font-display text-2xl focus:outline-none focus:border-white transition-colors placeholder:text-white/10 text-white" />
+                            <label className="font-mono text-xs uppercase tracking-widest text-gray-500 group-focus-within:text-white transition-colors">Your Name</label>
+                            <input type="text" placeholder="Enter your name" className="w-full bg-transparent border-b border-white/20 py-4 font-display text-2xl focus:outline-none focus:border-white transition-colors placeholder:text-white/10 text-white" />
                         </div>
                         <div className="space-y-2 group">
-                            <label className="font-mono text-xs uppercase tracking-widest text-gray-500 group-focus-within:text-white transition-colors">Frequency</label>
-                            <input type="email" placeholder="Email Address" className="w-full bg-transparent border-b border-white/20 py-4 font-display text-2xl focus:outline-none focus:border-white transition-colors placeholder:text-white/10 text-white" />
+                            <label className="font-mono text-xs uppercase tracking-widest text-gray-500 group-focus-within:text-white transition-colors">Your Email</label>
+                            <input type="email" placeholder="Enter your email" className="w-full bg-transparent border-b border-white/20 py-4 font-display text-2xl focus:outline-none focus:border-white transition-colors placeholder:text-white/10 text-white" />
                         </div>
                         <MagneticButton>
                             <button className="w-full py-6 mt-8 bg-white text-black font-display text-xl uppercase tracking-widest hover:bg-gray-200 transition-colors flex justify-between items-center px-6 group rounded-xl">
-                                <span>Transmit Data</span>
+                                <span>Send Message</span>
                                 <ArrowUpRight className="w-6 h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             </button>
                         </MagneticButton>

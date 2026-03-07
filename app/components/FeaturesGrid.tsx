@@ -102,7 +102,7 @@ function FeatureCard({ feature, isMobile }: { feature: Feature, isMobile: boolea
                 {/* Action Area */}
                 <div className="flex justify-between items-end">
                      <div className={`font-mono text-[10px] ${subTextColor} opacity-50`}>
-                        {`// READY`}
+                        {`// AVAILABLE`}
                      </div>
                      <div className={`w-14 h-14 rounded-full border ${borderColor} flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 cursor-pointer`}>
                         <ArrowRight className="w-5 h-5 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
@@ -135,15 +135,15 @@ const BinaryVisual = () => {
 const features: Feature[] = [
   {
     id: 1,
-    title: "Smart Listening",
-    subtitle: "CAPTURE ENGINE",
-    description: "Whether you talk or type, the system instantly catches your raw thoughts. It records the context so you don't have to remember the details.",
+    title: "Easy Capture",
+    subtitle: "HOW IT WORKS",
+    description: "Whether you talk or type, the system instantly catches your raw thoughts. It records everything so you don't have to remember the details.",
     icon: <Mic className="w-6 h-6" />,
     light: true,
     visual: (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
             <span className="text-[12rem] md:text-[16rem] font-display font-bold tracking-tighter text-black/5 select-none whitespace-nowrap uppercase">
-                Voice
+                Notes
             </span>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-transparent h-full w-full animate-scan" />
         </div>
@@ -151,9 +151,9 @@ const features: Feature[] = [
   },
   {
     id: 2,
-    title: "Digital Vault",
-    subtitle: "RAW MEMORY STORE",
-    description: "Your ideas are kept in a secure, chronological archive. It's like having a search engine for your own brain that never forgets a single entry.",
+    title: "Secure Archive",
+    subtitle: "YOUR DATA VAULT",
+    description: "Your ideas are kept in a private, organized archive. It's like having a search engine for your own life that never forgets a single entry.",
     icon: <Database className="w-6 h-6" />,
     light: false,
     visual: (
@@ -174,18 +174,18 @@ const features: Feature[] = [
   },
   {
     id: 3,
-    title: "Reading the Vibe",
-    subtitle: "SEMANTIC ENCODER",
-    description: "The system doesn't just look at words; it understands the core concept of your thoughts, turning messy notes into organized data.",
+    title: "Smart Sorting",
+    subtitle: "THOUGHT ORGANIZER",
+    description: "The system doesn't just look at words; it understands the main point of your thoughts, turning messy notes into clear, organized ideas.",
     icon: <Binary className="w-6 h-6" />,
     light: true,
     visual: <BinaryVisual />
   },
   {
     id: 4,
-    title: "Habit Spotting",
-    subtitle: "PATTERN ANALYZER",
-    description: "PathOS looks for habits in how you think. It notices recurring themes, contradictions, or long-term motifs in your daily entries.",
+    title: "Seeing Habits",
+    subtitle: "PERSONAL PATTERNS",
+    description: "Praxis AI looks for trends in how you think. It notices recurring themes or important connections in your daily entries automatically.",
     icon: <Network className="w-6 h-6" />,
     light: false,
     visual: (
@@ -203,9 +203,9 @@ const features: Feature[] = [
   },
   {
     id: 5,
-    title: "The Aha! Moment",
-    subtitle: "INSIGHT GENERATOR",
-    description: "It connects current problems to past solutions. It gives you the big-picture view of your life that's usually hidden in the noise.",
+    title: "New Insights",
+    subtitle: "SMART CONNECTIONS",
+    description: "It connects today's problems to your past solutions. It gives you a clear view of your life that's usually hidden in the daily noise.",
     icon: <Zap className="w-6 h-6" />,
     light: true,
     visual: (
@@ -214,16 +214,16 @@ const features: Feature[] = [
                  <div className="w-1/2 h-1/2 bg-gradient-to-tr from-transparent to-amber-500/10 absolute top-0 right-0 rounded-tr-full origin-bottom-left animate-spin" style={{ animationDuration: '4s' }} />
              </div>
              <div className="absolute text-xs font-mono tracking-widest opacity-30 mt-32 text-amber-900">
-                 CONNECTING NODES...
+                 SEARCHING...
              </div>
         </div>
     )
   },
   {
     id: 6,
-    title: "Memory Trainer",
-    subtitle: "COGNITIVE TRAINER",
-    description: "Through quick briefings and smart quizzes, the system trains you on your own knowledge—turning past notes into active skills.",
+    title: "Daily Practice",
+    subtitle: "BRAIN TRAINING",
+    description: "Through quick reviews and helpful reminders, the system helps you remember what you've learned—turning old notes into useful knowledge.",
     icon: <Brain className="w-6 h-6" />,
     light: false,
     visual: (
@@ -275,7 +275,7 @@ export default function FeaturesGrid() {
         {/* Section Title Background */}
         <div className={`absolute left-12 z-0 ${isMobile ? 'top-0' : 'top-12'}`}>
              <h2 className="text-[12vw] font-display text-black opacity-[0.02] uppercase tracking-tighter leading-none whitespace-nowrap">
-                System Capabilities
+                What We Offer
              </h2>
         </div>
 

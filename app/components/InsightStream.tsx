@@ -46,7 +46,7 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
       <div className="flex items-center gap-4 mb-8 opacity-60">
         <div className="w-2 h-2 rounded-full bg-brand-black animate-pulse" />
         <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black">
-          Neural Log // Recent Patterns
+          AI Insights // Recent Patterns
         </h3>
         <div className="h-[1px] flex-grow bg-brand-black/10" />
       </div>
@@ -54,7 +54,12 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {loading ? (
             [...Array(3)].map((_, i) => (
-                <div key={i} className="bg-brand-black/5 border border-brand-black/10 p-6 rounded-2xl animate-pulse h-64" />
+                <div key={i} className="bg-brand-black/5 border border-brand-black/10 p-6 rounded-2xl animate-pulse h-64 flex flex-col justify-end">
+                    <div className="mt-4 flex flex-col items-center gap-2">
+                        <Activity className="w-4 h-4 text-brand-black opacity-20 animate-spin" />
+                        <span className="text-[7px] font-mono uppercase tracking-widest opacity-30">Analyzing...</span>
+                    </div>
+                </div>
             ))
         ) : (
             patterns.map((pattern, i) => {
@@ -98,7 +103,7 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
                                     onClick={() => toggleExpand(pattern.id)}
                                     className={`flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-colors px-3 py-1 rounded-full ${isExpanded ? 'bg-black text-white' : 'bg-black/5 text-black/40 hover:bg-black hover:text-white'}`}
                                 >
-                                    <span>{isExpanded ? 'Close' : isContradiction ? 'Socratic Debug' : 'Resolve'}</span>
+                                    <span>{isExpanded ? 'Close' : isContradiction ? 'Resolve Conflict' : 'See Action'}</span>
                                     <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                                 </button>
                             )}
@@ -118,17 +123,17 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
                                             <div className="space-y-4">
                                                 <div className="flex items-center gap-2 text-amber-600">
                                                     <Sparkles className="w-3 h-3" />
-                                                    <span className="font-mono text-[9px] uppercase tracking-widest font-bold">Neural Conflict Debugger</span>
+                                                    <span className="font-mono text-[9px] uppercase tracking-widest font-bold">Help Resolve Conflict</span>
                                                 </div>
                                                 <p className="text-[11px] font-mono text-black/70 italic bg-amber-500/5 p-4 border-l-2 border-amber-500">
-                                                    &quot;Two conflicting data points detected. How do you reconcile this logical divergence?&quot;
+                                                    &quot;You have two thoughts that seem to disagree. How would you explain this?&quot;
                                                 </p>
                                                 <div className="relative">
                                                     <textarea 
                                                         value={resolutionText}
                                                         onChange={(e) => setResolutionText(e.target.value)}
                                                         className="w-full bg-black/5 border border-black/10 rounded-xl p-4 font-mono text-xs focus:outline-none focus:border-amber-500 min-h-[100px] resize-none"
-                                                        placeholder="Synthesize resolution..."
+                                                        placeholder="Type your thoughts here..."
                                                     />
                                                     <button 
                                                         disabled={isResolving || !resolutionText.trim()}
@@ -143,7 +148,7 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
                                             <div className="space-y-4">
                                                 <div className="flex items-center gap-2 text-brand-black">
                                                     <CheckSquare className="w-3 h-3" />
-                                                    <span className="font-mono text-[9px] uppercase tracking-widest font-bold">Recommended Protocol</span>
+                                                    <span className="font-mono text-[9px] uppercase tracking-widest font-bold">Suggested Action</span>
                                                 </div>
                                                 <div className="text-xs font-mono leading-relaxed text-black/70 bg-black/5 p-4 rounded-xl border border-black/10">
                                                     {pattern.suggestedAction}
