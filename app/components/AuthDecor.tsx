@@ -39,7 +39,7 @@ export default function AuthDecor() {
   }, [])
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-brand-white -z-10">
+    <div className="absolute inset-0 overflow-hidden bg-transparent -z-10">
       {/* 1. Base Grid - Moving */}
       <div className="absolute inset-0 opacity-[0.05]" 
            style={{ 
@@ -84,8 +84,8 @@ export default function AuthDecor() {
         />
       ))}
 
-      {/* 4. Vignette - Light */}
-      <div className="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #ffffff 90%)" />
+      {/* 4. Vignette - Light (Adjusted to be less aggressive) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_currentColor_90%)] opacity-10" />
     </div>
   )
 }

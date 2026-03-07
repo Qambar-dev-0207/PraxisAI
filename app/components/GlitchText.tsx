@@ -46,6 +46,9 @@ export default function GlitchText({ text, as: Component = 'span', className, tr
     if (trigger) {
         scramble()
     }
+    return () => {
+        if (intervalRef.current) clearInterval(intervalRef.current)
+    }
   }, [trigger, scramble])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

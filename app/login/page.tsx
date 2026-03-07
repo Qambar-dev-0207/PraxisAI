@@ -7,12 +7,13 @@ import Link from 'next/link';
 import { ArrowRight, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import AuthDecor from '../components/AuthDecor';
+import BaryonLoader from '../components/BaryonLoader';
 
 export default function LoginPage() {
   const [errorMessage, dispatch] = useActionState(authenticate, undefined);
 
   return (
-    <main className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-white text-black font-sans selection:bg-lime-400 selection:text-white">
+    <main className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-white text-black font-sans selection:bg-amber-500/30 selection:text-black">
       <AuthDecor />
 
       {/* Grid Overlay */}
@@ -36,7 +37,7 @@ export default function LoginPage() {
                 transition={{ duration: 0.8 }}
              >
                  <div className="flex items-center gap-3 mb-8">
-                     <div className="w-2 h-2 bg-lime-500 animate-pulse" />
+                     <div className="w-2 h-2 bg-amber-500 animate-pulse" />
                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/60">System Access Node</span>
                  </div>
                  
@@ -53,7 +54,7 @@ export default function LoginPage() {
                 className="space-y-6"
              >
                  <p className="font-mono text-sm max-w-md leading-relaxed text-black/70">
-                    <span className="text-lime-600">&gt;&gt;&gt;</span> Secure cognitive augmentation environment.
+                    <span className="text-amber-600">&gt;&gt;&gt;</span> Secure cognitive augmentation environment.
                     <br />
                     Initializing neural handshake protocol. 
                     Encryption level: <span className="text-black font-bold">QUANTUM-256</span>.
@@ -66,7 +67,7 @@ export default function LoginPage() {
                     </div>
                     <div>
                         <span className="block font-mono text-[10px] text-black/40 uppercase tracking-widest">Status</span>
-                        <span className="font-display text-xl text-lime-600">Operational</span>
+                        <span className="font-display text-xl text-amber-600">Operational</span>
                     </div>
                  </div>
              </motion.div>
@@ -82,25 +83,25 @@ export default function LoginPage() {
             >
                 <div className="mb-8">
                     <h2 className="text-3xl font-display uppercase tracking-widest mb-2">Identify</h2>
-                    <div className="h-1 w-12 bg-lime-500" />
+                    <div className="h-1 w-12 bg-amber-500" />
                 </div>
 
                 <form action={dispatch} className="space-y-5">
                     <div className="group">
-                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-lime-600 transition-colors">
+                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-amber-600 transition-colors">
                             Operator ID (Email)
                         </label>
                         <input 
                             name="email"
                             type="email" 
                             required
-                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-lime-500 transition-all rounded-none"
+                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-amber-500 transition-all rounded-none"
                             placeholder="USER@PRAXIS.AI"
                         />
                     </div>
 
                     <div className="group">
-                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-lime-600 transition-colors">
+                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-amber-600 transition-colors">
                             Access Key (Password)
                         </label>
                         <input 
@@ -108,7 +109,7 @@ export default function LoginPage() {
                             type="password" 
                             required
                             minLength={6}
-                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-lime-500 transition-all rounded-none"
+                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-amber-500 transition-all rounded-none"
                             placeholder="••••••••"
                         />
                     </div>
@@ -125,7 +126,7 @@ export default function LoginPage() {
                     </div>
 
                     <div className="text-center pt-8">
-                        <Link href="/register" className="font-mono text-xs uppercase tracking-widest text-black/40 hover:text-lime-600 transition-colors border-b border-transparent hover:border-lime-600 pb-1">
+                        <Link href="/register" className="font-mono text-xs uppercase tracking-widest text-black/40 hover:text-amber-600 transition-colors border-b border-transparent hover:border-amber-600 pb-1">
                             New Node Initialization →
                         </Link>
                     </div>
@@ -143,11 +144,14 @@ function SubmitButton() {
   return (
     <button
       disabled={pending}
-      className="w-full bg-black text-white hover:bg-lime-500 hover:text-black transition-colors duration-300 py-6 px-8 flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full bg-black text-white hover:bg-amber-500 hover:text-black transition-colors duration-300 py-6 px-8 flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold">
-        {pending ? 'AUTHENTICATING...' : 'EXECUTE SEQUENCE'}
-      </span>
+      <div className="flex items-center gap-3 h-4">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold">
+            {pending ? 'AUTHENTICATING' : 'EXECUTE SEQUENCE'}
+        </span>
+        {pending && <BaryonLoader />}
+      </div>
       <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300" />
     </button>
   );

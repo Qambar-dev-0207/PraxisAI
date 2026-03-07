@@ -7,9 +7,10 @@ import { z } from 'zod';
 
 async function getUser(email: string) {
   try {
-    console.log('Fetching user from DB for email:', email);
+    const normalizedEmail = email.toLowerCase();
+    console.log('Fetching user from DB for email:', normalizedEmail);
     const db = await getDb();
-    const user = await db.collection('users').findOne({ email });
+    const user = await db.collection('users').findOne({ email: normalizedEmail });
     if (user) console.log('User fetched successfully');
     return user;
   } catch (error) {

@@ -7,12 +7,13 @@ import Link from 'next/link';
 import { ArrowRight, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import AuthDecor from '../components/AuthDecor';
+import BaryonLoader from '../components/BaryonLoader';
 
 export default function RegisterPage() {
   const [state, dispatch] = useActionState(registerUser, undefined);
 
   return (
-    <main className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-white text-black font-sans selection:bg-lime-400 selection:text-white">
+    <main className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-white text-black font-sans selection:bg-amber-500/30 selection:text-black">
       <AuthDecor />
 
       {/* Grid Overlay */}
@@ -36,7 +37,7 @@ export default function RegisterPage() {
                 transition={{ duration: 0.8 }}
              >
                  <div className="flex items-center gap-3 mb-8">
-                     <div className="w-2 h-2 bg-lime-500 animate-pulse" />
+                     <div className="w-2 h-2 bg-amber-500 animate-pulse" />
                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/60">Node Creation Protocol</span>
                  </div>
                  
@@ -53,7 +54,7 @@ export default function RegisterPage() {
                 className="space-y-6"
              >
                  <p className="font-mono text-sm max-w-md leading-relaxed text-black/70">
-                    <span className="text-lime-600">&gt;&gt;&gt;</span> Allocating secure memory partition.
+                    <span className="text-amber-600">&gt;&gt;&gt;</span> Allocating secure memory partition.
                     <br />
                     Generating unique identity hash. 
                     Writing to immutable ledger.
@@ -64,7 +65,7 @@ export default function RegisterPage() {
                          <motion.div 
                             key={i}
                             className="w-2 bg-black/10"
-                            animate={{ height: [10, 30, 15, 40, 10], backgroundColor: ['rgba(0,0,0,0.1)', 'rgba(132, 204, 22, 0.8)', 'rgba(0,0,0,0.1)'] }}
+                            animate={{ height: [10, 30, 15, 40, 10], backgroundColor: ['rgba(0,0,0,0.1)', '#f59e0b', 'rgba(0,0,0,0.1)'] }}
                             transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
                          />
                      ))}
@@ -82,39 +83,39 @@ export default function RegisterPage() {
             >
                 <div className="mb-8">
                     <h2 className="text-3xl font-display uppercase tracking-widest mb-2">Initialize</h2>
-                    <div className="h-1 w-12 bg-lime-500" />
+                    <div className="h-1 w-12 bg-amber-500" />
                 </div>
 
                 <form action={dispatch} className="space-y-5">
                     
                     <div className="group">
-                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-lime-600 transition-colors">
+                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-amber-600 transition-colors">
                             Designation (Name)
                         </label>
                         <input 
                             name="name"
                             type="text" 
                             required
-                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-lime-500 transition-all rounded-none"
+                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-amber-500 transition-all rounded-none"
                             placeholder="OPERATOR_01"
                         />
                     </div>
 
                     <div className="group">
-                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-lime-600 transition-colors">
+                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-amber-600 transition-colors">
                             Identifier (Email)
                         </label>
                         <input 
                             name="email"
                             type="email" 
                             required
-                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-lime-500 transition-all rounded-none"
+                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-amber-500 transition-all rounded-none"
                             placeholder="USER@PRAXIS.AI"
                         />
                     </div>
 
                     <div className="group">
-                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-lime-600 transition-colors">
+                        <label className="block font-mono text-[10px] uppercase tracking-widest text-black/40 mb-1 group-focus-within:text-amber-600 transition-colors">
                             Secure Key (Password)
                         </label>
                         <input 
@@ -122,7 +123,7 @@ export default function RegisterPage() {
                             type="password" 
                             required
                             minLength={6}
-                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-lime-500 transition-all rounded-none"
+                            className="w-full bg-transparent border-b border-black/20 py-2 text-xl font-display tracking-wide text-black placeholder:text-black/10 focus:outline-none focus:border-amber-500 transition-all rounded-none"
                             placeholder="••••••••"
                         />
                     </div>
@@ -139,7 +140,7 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="text-center pt-8">
-                        <Link href="/login" className="font-mono text-xs uppercase tracking-widest text-black/40 hover:text-lime-600 transition-colors border-b border-transparent hover:border-lime-600 pb-1">
+                        <Link href="/login" className="font-mono text-xs uppercase tracking-widest text-black/40 hover:text-amber-600 transition-colors border-b border-transparent hover:border-amber-600 pb-1">
                             Existing Node Access →
                         </Link>
                     </div>
@@ -157,11 +158,14 @@ function SubmitButton() {
   return (
     <button
       disabled={pending}
-      className="w-full bg-black text-white hover:bg-lime-500 hover:text-black transition-colors duration-300 py-6 px-8 flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full bg-black text-white hover:bg-amber-500 hover:text-black transition-colors duration-300 py-6 px-8 flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold">
-        {pending ? 'ALLOCATING...' : 'ESTABLISH IDENTITY'}
-      </span>
+      <div className="flex items-center gap-3 h-4">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold">
+            {pending ? 'ALLOCATING' : 'ESTABLISH IDENTITY'}
+        </span>
+        {pending && <BaryonLoader />}
+      </div>
       <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300" />
     </button>
   );
