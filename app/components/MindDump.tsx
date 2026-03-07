@@ -3,7 +3,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { saveThought, analyzeInput } from '../actions'
-import { ArrowRight, CheckCircle, Mic, MicOff, Sparkles, Activity, Terminal } from 'lucide-react'
+import { ArrowRight, CheckCircle, Mic, MicOff, Sparkles, Activity, Terminal, Zap, ZapOff, BookOpen, Layers } from 'lucide-react'
+import { useBinauralBeats } from '../hooks/useBinauralBeats'
+import { AIAnalysis } from '../../lib/types'
 
 // Define types for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -46,19 +48,15 @@ declare global {
 const SpeechRecognitionConstructor = typeof window !== 'undefined' && 
   (window.SpeechRecognition || window.webkitSpeechRecognition)
 
-interface ProcessedData {
-  processedContent: string;
-  tags: string[];
-  suggestedImportance: 'TODAY' | 'WEEK' | 'LATER' | 'NOT_IMPORTANT';
-}
-
 export default function MindDump() {
   const [step, setStep] = useState<'INPUT' | 'ANALYZING' | 'IMPORTANCE' | 'SAVING' | 'SAVED'>('INPUT')
   const [content, setContent] = useState('')
-  const [processedData, setProcessedData] = useState<ProcessedData | null>(null)
+  const [processedData, setProcessedData] = useState<AIAnalysis | null>(null)
   const [isListening, setIsListening] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
+  
+  const { isActive: isFocusMode, toggle: toggleFocus } = useBinauralBeats()
 
   useEffect(() => {
     if (step === 'INPUT' && !isListening) {
@@ -159,15 +157,28 @@ export default function MindDump() {
                     <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">Active Interface // Quick Ingest</span>
                 </div>
                 
-                <button 
-                    onClick={toggleListening}
-                    className={`group flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-500 ${isListening ? 'bg-brand-black text-brand-white border-brand-black' : 'bg-transparent text-brand-black/40 border-brand-black/10 hover:border-brand-black hover:text-brand-black'}`}
-                >
-                    <span className="font-mono text-[10px] uppercase tracking-widest">
-                        {isListening ? 'Listening' : 'Voice Mode'}
-                    </span>
-                    {isListening ? <MicOff className="w-3 h-3 animate-pulse" /> : <Mic className="w-3 h-3" />}
-                </button>
+                <div className="flex items-center gap-3">
+                    {/* Focus Mode Toggle */}
+                    <button 
+                        onClick={toggleFocus}
+                        className={`group flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-500 ${isFocusMode ? 'bg-amber-500 text-black border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-transparent text-brand-black/40 border-brand-black/10 hover:border-brand-black hover:text-brand-black'}`}
+                    >
+                        <span className="font-mono text-[10px] uppercase tracking-widest">
+                            {isFocusMode ? 'Focus Active' : 'Neural Entrainment'}
+                        </span>
+                        {isFocusMode ? <Zap className="w-3 h-3 animate-pulse" /> : <ZapOff className="w-3 h-3" />}
+                    </button>
+
+                    <button 
+                        onClick={toggleListening}
+                        className={`group flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-500 ${isListening ? 'bg-brand-black text-brand-white border-brand-black' : 'bg-transparent text-brand-black/40 border-brand-black/10 hover:border-brand-black hover:text-brand-black'}`}
+                    >
+                        <span className="font-mono text-[10px] uppercase tracking-widest">
+                            {isListening ? 'Listening' : 'Voice Mode'}
+                        </span>
+                        {isListening ? <MicOff className="w-3 h-3 animate-pulse" /> : <Mic className="w-3 h-3" />}
+                    </button>
+                </div>
             </div>
 
             <div className="relative group">
@@ -261,26 +272,59 @@ export default function MindDump() {
           >
             {/* AI Summary Section */}
             {processedData && (
-                <div className="mb-16 border border-brand-black/10 p-10 rounded-[2rem] bg-brand-black/5 backdrop-blur-md relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 opacity-5">
-                        <Sparkles className="w-32 h-32 text-brand-black" />
-                    </div>
-                    
-                    <div className="flex items-center gap-3 mb-8">
-                        <Sparkles className="w-4 h-4 text-brand-black" />
-                        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">AI Synthesized Insight</span>
+                <div className="space-y-6 mb-12">
+                    <div className="border border-brand-black/10 p-10 rounded-[2rem] bg-brand-black/5 backdrop-blur-md relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-5">
+                            <Sparkles className="w-32 h-32 text-brand-black" />
+                        </div>
+                        
+                        <div className="flex items-center gap-3 mb-8">
+                            <Sparkles className="w-4 h-4 text-brand-black" />
+                            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-black/40">AI Synthesized Insight</span>
+                        </div>
+
+                        <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tighter text-brand-black leading-tight mb-8">
+                            {processedData.processedContent}
+                        </h2>
+
+                        <div className="flex flex-wrap gap-2">
+                            {processedData.tags?.map((tag: string, i: number) => (
+                                <span key={i} className="px-3 py-1 border border-brand-black/10 font-mono text-[10px] uppercase tracking-widest text-brand-black/50 rounded-full hover:border-brand-black hover:text-brand-black transition-colors cursor-default">
+                                    #{tag}
+                                </span>
+                            ))}
+                        </div>
                     </div>
 
-                    <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tighter text-brand-black leading-tight mb-8">
-                        {processedData.processedContent}
-                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Linguistic Precision */}
+                        <div className="p-6 border border-black/5 bg-white rounded-3xl space-y-3">
+                             <div className="flex items-center gap-2 text-black/40">
+                                <BookOpen className="w-3 h-3" />
+                                <span className="font-mono text-[9px] uppercase tracking-widest">Linguistic Upgrade</span>
+                             </div>
+                             <p className="font-mono text-[11px] leading-relaxed italic text-black/80">
+                                &quot;{processedData.linguisticPrecision || "Expression efficiency verified."}&quot;
+                             </p>
+                        </div>
 
-                    <div className="flex flex-wrap gap-2">
-                        {processedData.tags?.map((tag: string, i: number) => (
-                            <span key={i} className="px-3 py-1 border border-brand-black/10 font-mono text-[10px] uppercase tracking-widest text-brand-black/50 rounded-full hover:border-brand-black hover:text-brand-black transition-colors cursor-default">
-                                #{tag}
-                            </span>
-                        ))}
+                        {/* Perspective Shifter */}
+                        <div className="p-6 border border-black/5 bg-white rounded-3xl space-y-4">
+                             <div className="flex items-center gap-2 text-black/40">
+                                <Layers className="w-3 h-3" />
+                                <span className="font-mono text-[9px] uppercase tracking-widest">Simulated Perspectives</span>
+                             </div>
+                             <div className="space-y-3">
+                                {processedData.perspectiveShifts?.map((shift, i) => (
+                                    <div key={i} className="group">
+                                        <span className="block font-display text-[9px] uppercase tracking-wider font-bold mb-1 text-amber-600">{shift.label}</span>
+                                        <p className="font-mono text-[10px] text-black/60 leading-relaxed border-l border-black/10 pl-3">
+                                            {shift.content}
+                                        </p>
+                                    </div>
+                                ))}
+                             </div>
+                        </div>
                     </div>
                 </div>
             )}

@@ -94,7 +94,16 @@ export async function analyzeThought(content: string) {
           role: "system",
           content: `You are an expert cognitive assistant for "Praxis AI". 
           Process the user's mind dump and return a JSON object.
-          Keys: "processedContent" (concise action/idea), "suggestedImportance" ("TODAY", "WEEK", "LATER", or "NOT_IMPORTANT"), "tags" (array of 2-3 strings).
+          
+          REQUIRED KEYS:
+          1. "processedContent": concise action/idea.
+          2. "suggestedImportance": "TODAY", "WEEK", "LATER", or "NOT_IMPORTANT".
+          3. "tags": array of 2-3 strings.
+          4. "linguisticPrecision": ONE sentence of feedback on how they can state this thought more clearly or concisely (e.g. "Avoid filler words like 'maybe' to increase certainty").
+          5. "perspectiveShifts": array of 2 objects:
+             - "label": A unique cognitive framework (e.g. "Stoic Filter", "First Principles", "The Antagonist", "10-Year View").
+             - "content": A 1-sentence re-framing of their thought through that lens.
+          
           Return ONLY the raw JSON object. No markdown.`
         },
         {

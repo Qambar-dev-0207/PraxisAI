@@ -230,41 +230,14 @@ export async function getRecallItems() {
 
 
     const items = await db.collection<Thought>('thoughts')
-
-
-
       .find({
-
-
-
         userId: user._id as ObjectId,
-
-
-
         isArchived: false,
-
-
-
         isReviewed: false,
-
-
-
         reviewDate: { $lte: new Date() }
-
-
-
       })
-
-
-
-      .sort({ reviewDate: 1 })
-
-
-
-      .limit(3)
-
-
-
+      .sort({ masteryScore: 1, reviewDate: 1 }) // Prioritize low mastery
+      .limit(5) // Increased limit slightly for better session
       .toArray();
 
 
@@ -381,49 +354,40 @@ export async function getRecallItems() {
 
 
 
-    export async function processRecallItem(id: string, action: 'KEEP' | 'DONE' | 'SNOOZE') {
+    export async function processRecallItem(id: string, action: 'KEEP' | 'DONE' | 'SNOOZE' | 'INTEGRATED') {
 
+      const db = await getDb();
+      const objectId = new ObjectId(id);
 
+      if (action === 'DONE' || action === 'INTEGRATED') {
+        const increment = action === 'INTEGRATED' ? 20 : 10;
+        const thought = await db.collection<Thought>('thoughts').findOne({ _id: objectId });
+        const currentScore = thought?.masteryScore || 0;
+        const newScore = Math.min(100, currentScore + increment);
+        const isFullyIntegrated = newScore >= 100;
 
-    
-
-  const db = await getDb();
-
-  const objectId = new ObjectId(id);
-
-
-
-  if (action === 'DONE') {
-
-    await db.collection<Thought>('thoughts').updateOne(
-
-        { _id: objectId },
-
-        { $set: { isArchived: true, isReviewed: true } }
-
-    );
-
-  } else if (action === 'KEEP') {
-
-    await db.collection<Thought>('thoughts').updateOne(
-
-        { _id: objectId },
-
-        { $set: { reviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) } }
-
-    );
-
-  } else if (action === 'SNOOZE') {
-
-    await db.collection<Thought>('thoughts').updateOne(
-
-        { _id: objectId },
-
-        { $set: { reviewDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) } }
-
-    );
-
-  }
+        await db.collection<Thought>('thoughts').updateOne(
+            { _id: objectId },
+            { 
+              $set: { 
+                masteryScore: newScore,
+                isArchived: isFullyIntegrated, 
+                isReviewed: true,
+                reviewDate: isFullyIntegrated ? null : new Date(Date.now() + (currentScore / 10 + 2) * 24 * 60 * 60 * 1000) 
+              } 
+            }
+        );
+      } else if (action === 'KEEP') {
+        await db.collection<Thought>('thoughts').updateOne(
+            { _id: objectId },
+            { $set: { reviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) } }
+        );
+      } else if (action === 'SNOOZE') {
+        await db.collection<Thought>('thoughts').updateOne(
+            { _id: objectId },
+            { $set: { reviewDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) } }
+        );
+      }
 
   
 
@@ -539,6 +503,95 @@ export async function getRecentPatterns() {
 
 
 
+}
+
+
+
+export async function getMentalLoad() {
+  try {
+    const session = await auth();
+    if (!session?.user?.email) return { load: 0, status: 'UNKNOWN' };
+
+    const db = await getDb();
+    const user = await db.collection('users').findOne({ email: session.user.email });
+    if (!user) return { load: 0, status: 'UNKNOWN' };
+
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const todayThoughts = await db.collection<Thought>('thoughts')
+      .find({
+        userId: user._id as ObjectId,
+        createdAt: { $gte: startOfDay }
+      })
+      .toArray();
+
+    // Calculate load: count + weight by importance
+    let loadScore = 0;
+    todayThoughts.forEach(t => {
+      loadScore += 10; // base weight
+      if (t.importance === 'TODAY') loadScore += 15;
+      if (t.importance === 'WEEK') loadScore += 5;
+    });
+
+    // Normalize to 0-100 (assuming 100 is "high")
+    const normalizedLoad = Math.min(100, loadScore);
+    
+    let status: 'LOW' | 'OPTIMAL' | 'HIGH' | 'CRITICAL' = 'LOW';
+    if (normalizedLoad > 85) status = 'CRITICAL';
+    else if (normalizedLoad > 60) status = 'HIGH';
+    else if (normalizedLoad > 30) status = 'OPTIMAL';
+
+    return { load: normalizedLoad, status, count: todayThoughts.length };
+  } catch (error) {
+    console.error("Error in getMentalLoad:", error);
+    return { load: 0, status: 'ERROR' };
+  }
+}
+
+export async function getNeuralMapData() {
+  try {
+    const session = await auth();
+    if (!session?.user?.email) return { nodes: [], links: [] };
+
+    const db = await getDb();
+    const user = await db.collection('users').findOne({ email: session.user.email });
+    if (!user) return { nodes: [], links: [] };
+
+    const thoughts = await db.collection<Thought>('thoughts')
+      .find({ userId: user._id as ObjectId, isArchived: false })
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .toArray();
+
+    const patterns = await db.collection<Pattern>('patterns')
+      .find({ userId: user._id as ObjectId })
+      .toArray();
+
+    return serializeDoc({ thoughts, patterns }) as { thoughts: Thought[], patterns: Pattern[] };
+  } catch (error) {
+    console.error("Error in getNeuralMapData:", error);
+    return { thoughts: [], patterns: [] };
+  }
+}
+
+export async function resolveContradiction(patternId: string, resolution: string) {
+  try {
+    const db = await getDb();
+    const objectId = new ObjectId(patternId);
+
+    // Archive the pattern and its related insights
+    await Promise.all([
+      db.collection('patterns').updateOne({ _id: objectId }, { $set: { resolved: true, resolution } }),
+      db.collection('insights').updateMany({ patternId: objectId }, { $set: { isViewed: true } })
+    ]);
+
+    revalidatePath('/dashboard');
+    return { success: true };
+  } catch (error) {
+    console.error("Error in resolveContradiction:", error);
+    return { success: false };
+  }
 }
 
 

@@ -13,6 +13,7 @@ export interface Thought {
   isReviewed: boolean;
   createdAt: Date;
   userId: ObjectId;
+  masteryScore?: number; // 0 to 100, tracking integration level
   patterns?: Pattern[];
 }
 
@@ -44,4 +45,9 @@ export interface AIAnalysis {
   processedContent: string;
   suggestedImportance: 'TODAY' | 'WEEK' | 'LATER' | 'NOT_IMPORTANT';
   tags: string[];
+  linguisticPrecision?: string; // Feedback on clarity/conciseness
+  perspectiveShifts?: {
+      label: string; // e.g., "The Stoic View"
+      content: string; // e.g., "Focus only on what you can control..."
+  }[];
 }
