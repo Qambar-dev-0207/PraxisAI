@@ -507,14 +507,14 @@ export async function getRecentPatterns() {
 
 
 
-export async function getMentalLoad() {
+export async function getMentalLoad(): Promise<{ load: number; status: 'LOW' | 'OPTIMAL' | 'HIGH' | 'CRITICAL' | 'UNKNOWN' | 'ERROR'; count: number }> {
   try {
     const session = await auth();
-    if (!session?.user?.email) return { load: 0, status: 'UNKNOWN' };
+    if (!session?.user?.email) return { load: 0, status: 'UNKNOWN', count: 0 };
 
     const db = await getDb();
     const user = await db.collection('users').findOne({ email: session.user.email });
-    if (!user) return { load: 0, status: 'UNKNOWN' };
+    if (!user) return { load: 0, status: 'UNKNOWN', count: 0 };
 
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -545,18 +545,18 @@ export async function getMentalLoad() {
     return { load: normalizedLoad, status, count: todayThoughts.length };
   } catch (error) {
     console.error("Error in getMentalLoad:", error);
-    return { load: 0, status: 'ERROR' };
+    return { load: 0, status: 'ERROR', count: 0 };
   }
 }
 
 export async function getNeuralMapData() {
   try {
     const session = await auth();
-    if (!session?.user?.email) return { nodes: [], links: [] };
+    if (!session?.user?.email) return { thoughts: [], patterns: [] };
 
     const db = await getDb();
     const user = await db.collection('users').findOne({ email: session.user.email });
-    if (!user) return { nodes: [], links: [] };
+    if (!user) return { thoughts: [], patterns: [] };
 
     const thoughts = await db.collection<Thought>('thoughts')
       .find({ userId: user._id as ObjectId, isArchived: false })

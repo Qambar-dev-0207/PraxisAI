@@ -274,7 +274,7 @@ export default function NeuralMap({ thoughts, patterns }: { thoughts: Thought[];
             ))}
         </group>
 
-        <EffectComposer disableNormalPass>
+        <EffectComposer enableNormalPass>
             <Bloom luminanceThreshold={1} luminanceSmoothing={0.9} height={300} intensity={1.2} />
             <Noise opacity={0.015} />
         </EffectComposer>
