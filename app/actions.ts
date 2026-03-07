@@ -8,24 +8,24 @@ import { ObjectId } from 'mongodb'
 import { Thought, Pattern, Insight } from '../lib/types'
 
 // Helper to sanitize Mongo docs recursively
-function serializeDoc(doc: unknown): unknown {
+function serializeDoc(doc: unknown): any {
   if (!doc) return null;
 
   if (Array.isArray(doc)) {
     return doc.map(serializeDoc);
   }
 
-  if (doc instanceof ObjectId || (typeof doc === 'object' && (doc as { _bsontype?: string })?._bsontype === 'ObjectID')) {
-    return doc.toString();
+  if (doc instanceof ObjectId || (typeof doc === 'object' && (doc as any)?._bsontype === 'ObjectID')) {
+    return (doc as any).toString();
   }
 
   if (doc instanceof Date) {
-    return doc;
+    return doc.toISOString();
   }
 
   if (typeof doc === 'object' && doc !== null) {
-    const newDoc: Record<string, unknown> = {};
-    const obj = doc as Record<string, unknown>;
+    const newDoc: Record<string, any> = {};
+    const obj = doc as Record<string, any>;
     for (const key of Object.keys(obj)) {
       const value = obj[key];
       if (key === '_id') {
@@ -41,7 +41,20 @@ function serializeDoc(doc: unknown): unknown {
 }
 
 export async function analyzeInput(content: string) {
-  return await analyzeThought(content)
+  try {
+    console.log("ServerAction: analyzeInput starting for content length:", content.length);
+    const analysis = await analyzeThought(content);
+    if (!analysis) {
+        console.warn("ServerAction: analyzeThought returned null");
+        return null;
+    }
+    console.log("ServerAction: analyzeThought successful");
+    // Ensure strict plain object for serialization
+    return JSON.parse(JSON.stringify(analysis));
+  } catch (error) {
+    console.error("ServerAction: Error in analyzeInput:", error);
+    return null;
+  }
 }
 
 export async function saveThought(
@@ -301,47 +314,48 @@ export async function getRecallItems() {
 
 
 
-    export async function processRecallItem(id: string, action: 'KEEP' | 'DONE' | 'SNOOZE' | 'INTEGRATED') {
+export async function processRecallItem(id: string, action: 'KEEP' | 'DONE' | 'SNOOZE' | 'INTEGRATED') {
+  try {
+    const db = await getDb();
+    const objectId = new ObjectId(id);
 
-      const db = await getDb();
-      const objectId = new ObjectId(id);
+    if (action === 'DONE' || action === 'INTEGRATED') {
+      const increment = action === 'INTEGRATED' ? 20 : 10;
+      const thought = await db.collection<Thought>('thoughts').findOne({ _id: objectId });
+      const currentScore = thought?.masteryScore || 0;
+      const newScore = Math.min(100, currentScore + increment);
+      const isFullyIntegrated = newScore >= 100;
 
-      if (action === 'DONE' || action === 'INTEGRATED') {
-        const increment = action === 'INTEGRATED' ? 20 : 10;
-        const thought = await db.collection<Thought>('thoughts').findOne({ _id: objectId });
-        const currentScore = thought?.masteryScore || 0;
-        const newScore = Math.min(100, currentScore + increment);
-        const isFullyIntegrated = newScore >= 100;
+      await db.collection<Thought>('thoughts').updateOne(
+          { _id: objectId },
+          { 
+            $set: { 
+              masteryScore: newScore,
+              isArchived: isFullyIntegrated, 
+              isReviewed: true,
+              reviewDate: isFullyIntegrated ? null : new Date(Date.now() + (currentScore / 10 + 2) * 24 * 60 * 60 * 1000) 
+            } 
+          }
+      );
+    } else if (action === 'KEEP') {
+      await db.collection<Thought>('thoughts').updateOne(
+          { _id: objectId },
+          { $set: { reviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) } }
+      );
+    } else if (action === 'SNOOZE') {
+      await db.collection<Thought>('thoughts').updateOne(
+          { _id: objectId },
+          { $set: { reviewDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) } }
+      );
+    }
 
-        await db.collection<Thought>('thoughts').updateOne(
-            { _id: objectId },
-            { 
-              $set: { 
-                masteryScore: newScore,
-                isArchived: isFullyIntegrated, 
-                isReviewed: true,
-                reviewDate: isFullyIntegrated ? null : new Date(Date.now() + (currentScore / 10 + 2) * 24 * 60 * 60 * 1000) 
-              } 
-            }
-        );
-      } else if (action === 'KEEP') {
-        await db.collection<Thought>('thoughts').updateOne(
-            { _id: objectId },
-            { $set: { reviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) } }
-        );
-      } else if (action === 'SNOOZE') {
-        await db.collection<Thought>('thoughts').updateOne(
-            { _id: objectId },
-            { $set: { reviewDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) } }
-        );
-      }
-
-  
-
-  revalidatePath('/recall')
-
-  revalidatePath('/')
-
+    revalidatePath('/recall');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error("Error in processRecallItem:", error);
+    return { success: false, error: "Failed to process item" };
+  }
 }
 
 
