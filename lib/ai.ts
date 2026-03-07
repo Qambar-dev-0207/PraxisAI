@@ -37,7 +37,7 @@ export async function analyzePatterns(newContent: string, pastContext: { content
     const contextString = pastContext.map(t => `- [${t.date.toISOString().split('T')[0]}] ${t.content}`).join('\n');
     
     const response = await openrouter.chat.send({
-      model: "gpt-oss-120b",
+      model: "google/gemini-2.5-flash",
       messages: [
         {
           role: "system",
@@ -88,7 +88,7 @@ export async function analyzeThought(content: string) {
   try {
     // Using a reliable model from OpenRouter
     const response = await openrouter.chat.send({
-      model: "gpt-oss-120b",
+      model: "google/gemini-2.5-flash",
       messages: [
         {
           role: "system",
@@ -134,7 +134,7 @@ export async function transcribeAudioBuffer(audioBuffer: Buffer): Promise<string
   }
   
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     
     const result = await model.generateContent([
       {

@@ -111,10 +111,9 @@ export async function saveThought(
 
     const newThoughtId = newThoughtResult.insertedId;
 
-    // 5. Save Patterns & Insights
+    // 5. Save Patterns & Insights concurrently
     if (foundPatterns && foundPatterns.length > 0) {
-      for (const p of foundPatterns) {
-          // Create the pattern
+      await Promise.all(foundPatterns.map(async (p: any) => {
           const patternResult = await db.collection<Pattern>('patterns').insertOne({
               title: p.title,
               description: p.description,
@@ -126,7 +125,6 @@ export async function saveThought(
               createdAt: new Date()
           });
 
-          // Create the insight
           await db.collection<Insight>('insights').insertOne({
               content: p.description,
               type: p.type as 'RECURRENCE' | 'CONTRADICTION' | 'CONNECTION',
@@ -134,7 +132,7 @@ export async function saveThought(
               createdAt: new Date(),
               isViewed: false
           });
-      }
+      }));
     }
 
     revalidatePath('/')
@@ -247,73 +245,22 @@ export async function getRecallItems() {
 
 
     // Enrich with patterns and insights
-
-
-
     const enrichedItems = await Promise.all(items.map(async (item) => {
-
-
-
       // Find patterns that reference this thought ID
-
-
-
       const patterns = await db.collection<Pattern>('patterns')
-
-
-
           .find({ 
-
-
-
               userId: user._id as ObjectId,
-
-
-
               relatedThoughtIds: item._id as ObjectId
-
-
-
           })
-
-
-
           .toArray();
 
-
-
-      
-
-
-
-      // For each pattern, get its insights
-
-
-
+      // For each pattern, get its insights in parallel
       const patternsWithInsights = await Promise.all(patterns.map(async (p) => {
-
-
-
           const insights = await db.collection<Insight>('insights').find({ patternId: p._id as ObjectId }).toArray();
-
-
-
           return { ...p, insights };
-
-
-
       }));
 
-
-
-
-
-
-
       return { ...item, patterns: patternsWithInsights };
-
-
-
     }))
 
 

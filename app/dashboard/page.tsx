@@ -18,9 +18,13 @@ async function RecentPatterns() {
 
 export default async function Dashboard() {
   const session = await auth()
-  const pendingCount = await getPendingCount()
-  const loadData = await getMentalLoad()
-  const { thoughts, patterns } = await getNeuralMapData()
+  
+  // Run all independent data fetches in parallel to reduce waterfall latency
+  const [pendingCount, loadData, { thoughts, patterns }] = await Promise.all([
+    getPendingCount(),
+    getMentalLoad(),
+    getNeuralMapData()
+  ])
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-24 relative overflow-hidden bg-brand-white text-brand-black font-sans selection:bg-brand-black selection:text-brand-white">
