@@ -48,10 +48,13 @@ This project combines a high-fidelity cyberpunk aesthetic with functional AI too
 3.  **Environment Configuration**
     Create a `.env` file in the root directory and add the following keys:
     ```env
-    MONGODB_URI=your_mongodb_connection_string
+    DATABASE_URL=your_mongodb_connection_string
     AUTH_SECRET=your_auth_secret
+    AUTH_URL=http://localhost:3000
     GEMINI_API_KEY=your_gemini_api_key
+    OPENROUTER_API_KEY=your_openrouter_api_key
     ```
+    See `.env.example` for the full list.
 
 4.  **Ignite the System (Run Dev Server)**
     ```bash

@@ -8,19 +8,17 @@ import { z } from 'zod';
 async function getUser(email: string) {
   try {
     const normalizedEmail = email.toLowerCase();
-    console.log('Fetching user from DB for email:', normalizedEmail);
     const db = await getDb();
-    const user = await db.collection('users').findOne({ email: normalizedEmail });
-    if (user) console.log('User fetched successfully');
-    return user;
+    return await db.collection('users').findOne({ email: normalizedEmail });
   } catch (error) {
     console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    return null;
   }
 }
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
+  session: { strategy: 'jwt' },
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -28,34 +26,48 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
 
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-          try {
-            const user = await getUser(email);
-            if (!user) {
-                console.log('No user found with email:', email);
-                return null;
-            }
-            
-            const passwordsMatch = await bcrypt.compare(password, user.password);
-            if (passwordsMatch) {
-                return {
-                    id: user._id.toString(),
-                    email: user.email,
-                    name: user.name,
-                };
-            } else {
-                console.log('Password mismatch for user:', email);
-            }
-          } catch (e) {
-            console.error('Error during authorization:', e);
-            return null;
-          }
+        if (!parsedCredentials.success) {
+          return null;
         }
 
-        console.log('Invalid credentials');
-        return null;
+        const { email, password } = parsedCredentials.data;
+
+        try {
+          const user = await getUser(email);
+          if (!user || !user.password) return null;
+
+          const passwordsMatch = await bcrypt.compare(password, user.password);
+          if (!passwordsMatch) return null;
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+          };
+        } catch (e) {
+          console.error('Authorize error:', e);
+          return null;
+        }
       },
     }),
   ],
+  callbacks: {
+    ...authConfig.callbacks,
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token) {
+        session.user.id = token.id as string;
+        if (token.email) session.user.email = token.email as string;
+        if (token.name) session.user.name = token.name as string;
+      }
+      return session;
+    },
+  },
 });
