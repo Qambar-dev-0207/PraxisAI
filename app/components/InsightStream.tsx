@@ -18,6 +18,7 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
 
   if (!loading && (!patterns || patterns.length === 0)) return null
 
+
   const getIcon = (type: string | undefined) => {
     switch (type?.toUpperCase()) {
       case 'RECURRENCE': return <Repeat className="w-4 h-4" />
@@ -36,9 +37,15 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
   const handleResolve = async (id: string) => {
     if (!resolutionText.trim()) return
     setIsResolving(true)
-    await resolveContradiction(id, resolutionText)
-    setIsResolving(false)
-    setExpandedId(null)
+    try {
+      await resolveContradiction(id, resolutionText)
+      setExpandedId(null)
+      setResolutionText('')
+    } catch {
+      // keep panel open so user can retry
+    } finally {
+      setIsResolving(false)
+    }
   }
 
   return (

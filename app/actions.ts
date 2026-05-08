@@ -368,3 +368,97 @@ export async function resolveContradiction(patternId: string, resolution: string
     return { success: false };
   }
 }
+
+export async function getDashboardStats() {
+  try {
+    const ctx = await requireUser();
+    if (!ctx) return null;
+    const { db, user } = ctx;
+
+    const userId = user._id as ObjectId;
+
+    const [totalThoughts, archivedThoughts, avgMasteryResult] = await Promise.all([
+      db.collection<Thought>('thoughts').countDocuments({ userId, isArchived: false }),
+      db.collection<Thought>('thoughts').countDocuments({ userId, isArchived: true }),
+      db.collection<Thought>('thoughts').aggregate([
+        { $match: { userId } },
+        { $group: { _id: null, avg: { $avg: '$masteryScore' } } },
+      ]).toArray(),
+    ]);
+
+    const avgMastery = Math.round(avgMasteryResult[0]?.avg ?? 0);
+
+    // Streak: count consecutive days ending today that have at least 1 thought
+    const recentDates = await db.collection<Thought>('thoughts')
+      .aggregate([
+        { $match: { userId } },
+        { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } } } },
+        { $sort: { _id: -1 } },
+        { $limit: 365 },
+      ])
+      .toArray();
+
+    const dateSet = new Set(recentDates.map((d: any) => d._id as string));
+
+    let streak = 0;
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split('T')[0];
+      if (dateSet.has(key)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    return { totalThoughts, archivedThoughts, avgMastery, streak };
+  } catch (error) {
+    console.error("Error in getDashboardStats:", error);
+    return null;
+  }
+}
+
+export async function getAllThoughts(limit = 50, skip = 0) {
+  try {
+    const ctx = await requireUser();
+    if (!ctx) return [];
+    const { db, user } = ctx;
+
+    const thoughts = await db.collection<Thought>('thoughts')
+      .find({ userId: user._id as ObjectId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    return serializeDoc(thoughts) as Thought[];
+  } catch (error) {
+    console.error("Error in getAllThoughts:", error);
+    return [];
+  }
+}
+
+export async function deleteThought(id: string) {
+  try {
+    const ctx = await requireUser();
+    if (!ctx) return { success: false, error: 'Unauthorized' };
+    const { db, user } = ctx;
+
+    if (!ObjectId.isValid(id)) return { success: false, error: 'Invalid id' };
+    const objectId = new ObjectId(id);
+
+    await db.collection<Thought>('thoughts').deleteOne({
+      _id: objectId,
+      userId: user._id as ObjectId,
+    });
+
+    revalidatePath('/thoughts');
+    revalidatePath('/dashboard');
+    return { success: true };
+  } catch (error) {
+    console.error("Error in deleteThought:", error);
+    return { success: false };
+  }
+}
