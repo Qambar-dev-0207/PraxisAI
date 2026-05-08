@@ -17,13 +17,31 @@ async function RecentPatterns() {
 }
 
 export default async function Dashboard() {
-  const [session, pendingCount, loadData, { thoughts, patterns }, stats] = await Promise.all([
-    auth(),
-    getPendingCount(),
-    getMentalLoad(),
-    getNeuralMapData(),
-    getDashboardStats(),
-  ])
+  let session = null;
+  let pendingCount = 0;
+  let loadData = { load: 0, status: 'UNKNOWN', count: 0 };
+  let thoughts: any[] = [];
+  let patterns: any[] = [];
+  let stats = null;
+
+  try {
+    const results = await Promise.all([
+      auth(),
+      getPendingCount(),
+      getMentalLoad(),
+      getNeuralMapData(),
+      getDashboardStats(),
+    ]);
+    
+    session = results[0];
+    pendingCount = results[1] as number;
+    loadData = results[2] as any;
+    thoughts = (results[3] as any).thoughts;
+    patterns = (results[3] as any).patterns;
+    stats = results[4] as any;
+  } catch (error) {
+    console.error("Dashboard Data Fetch Failure:", error);
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-24 relative overflow-hidden bg-brand-white text-brand-black font-sans selection:bg-brand-black selection:text-brand-white">

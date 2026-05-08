@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Activity, AlertTriangle, Repeat, Network, ChevronDown, CheckSquare, Sparkles, Send } from 'lucide-react'
 import { Pattern } from '../../lib/types'
@@ -15,6 +15,11 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [resolutionText, setResolutionText] = useState('')
   const [isResolving, setIsResolving] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   if (!loading && (!patterns || patterns.length === 0)) return null
 
@@ -87,8 +92,8 @@ export default function InsightStream({ patterns, loading }: InsightStreamProps)
                             <div className={`p-2 rounded-lg transition-colors ${isContradiction ? 'bg-amber-500/10 text-amber-600' : 'bg-black/5'}`}>
                                 {getIcon(pattern.type)}
                             </div>
-                            <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest" suppressHydrationWarning>
-                                {new Date(pattern.createdAt).toLocaleDateString()}
+                            <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest">
+                                {mounted ? new Date(pattern.createdAt).toLocaleDateString() : '...'}
                             </span>
                         </div>
 

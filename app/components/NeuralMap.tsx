@@ -67,7 +67,8 @@ function Node({ data, onSelect, isSelected }: { data: NodeData; onSelect: (d: No
       <Text
         position={[0, 1.1, 0]}
         fontSize={0.2}
-        color={hovered || isSelected ? "#000000" : "rgba(0,0,0,0.35)"}
+        color="#000000"
+        fillOpacity={hovered || isSelected ? 1 : 0.35}
         anchorX="center"
         anchorY="middle"
         maxWidth={3}
@@ -113,6 +114,11 @@ function ConnectionLine({ link }: { link: LinkData }) {
 
 export default function NeuralMap({ thoughts, patterns }: { thoughts: Thought[]; patterns: Pattern[] }) {
   const [selectedNode, setSelectedNode] = useState<NodeData | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const { nodes, links } = useMemo(() => {
     if (!thoughts.length) return { nodes: [], links: [] }
@@ -218,10 +224,16 @@ export default function NeuralMap({ thoughts, patterns }: { thoughts: Thought[];
         </div>
       )}
 
-      {isEmpty ? (
+      {!mounted || isEmpty ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-black/20">
-          <GitCommit className="w-12 h-12 opacity-20" />
-          <p className="font-mono text-[10px] uppercase tracking-[0.4em]">No thoughts yet — start capturing above</p>
+          {!mounted ? (
+             <Activity className="w-8 h-8 animate-spin opacity-20" />
+          ) : (
+            <>
+              <GitCommit className="w-12 h-12 opacity-20" />
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em]">No thoughts yet — start capturing above</p>
+            </>
+          )}
         </div>
       ) : (
         <Canvas camera={{ position: [0, 0, 28], fov: 45 }}>

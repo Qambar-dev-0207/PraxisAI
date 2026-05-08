@@ -324,19 +324,20 @@ export async function getNeuralMapData() {
     if (!ctx) return { thoughts: [], patterns: [] };
     const { db, user } = ctx;
 
-    const thoughts = await db.collection<Thought>('thoughts')
-      .find({ userId: user._id as ObjectId, isArchived: false })
-      .sort({ createdAt: -1 })
-      .limit(100)
-      .toArray();
-
-    const patterns = await db.collection<Pattern>('patterns')
-      .find({ userId: user._id as ObjectId })
-      .toArray();
+    const [thoughts, patterns] = await Promise.all([
+      db.collection<Thought>('thoughts')
+        .find({ userId: user._id as ObjectId, isArchived: false })
+        .sort({ createdAt: -1 })
+        .limit(100)
+        .toArray(),
+      db.collection<Pattern>('patterns')
+        .find({ userId: user._id as ObjectId })
+        .toArray()
+    ]);
 
     return serializeDoc({ thoughts, patterns }) as { thoughts: Thought[]; patterns: Pattern[] };
   } catch (error) {
-    console.error("Error in getNeuralMapData:", error);
+    console.error("Critical Error in getNeuralMapData:", error);
     return { thoughts: [], patterns: [] };
   }
 }

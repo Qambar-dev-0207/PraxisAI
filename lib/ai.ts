@@ -6,13 +6,26 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 const OPENROUTER_MODEL = "tencent/hunyuan-a13b-instruct:free";
 
+async function fetchWithTimeout(url: string, options: any, timeout = 15000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(id);
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    throw error;
+  }
+}
+
 async function fetchOpenRouter(
   messages: { role: string; content: string }[],
   model = OPENROUTER_MODEL
 ): Promise<string | null> {
   if (!process.env.OPENROUTER_API_KEY) return null;
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const response = await fetchWithTimeout("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
@@ -24,12 +37,18 @@ async function fetchOpenRouter(
     });
 
     if (!response.ok) {
-      console.error("OpenRouter error:", response.status, await response.text().catch(() => ""));
+      const errorText = await response.text().catch(() => "No error body");
+      console.error(`OpenRouter error (${response.status}):`, errorText);
       return null;
     }
-    return (await response.json()).choices?.[0]?.message?.content ?? null;
-  } catch (error) {
-    console.error("OpenRouter fetch failed:", error);
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content ?? null;
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      console.error("OpenRouter request timed out after 15s");
+    } else {
+      console.error("OpenRouter fetch failed:", error.message || error);
+    }
     return null;
   }
 }
@@ -47,16 +66,25 @@ async function fetchGemini(prompt: string): Promise<string | null> {
       model: "gemini-2.0-flash",
       generationConfig: { temperature: 0.7, maxOutputTokens: 1200, responseMimeType: "application/json" },
     });
-    return (await model.generateContent(prompt)).response.text() ?? null;
-  } catch {
+    const result = await Promise.race([
+        model.generateContent(prompt),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Gemini Timeout')), 15000))
+    ]) as any;
+    return result.response.text() ?? null;
+  } catch (err: any) {
+    console.warn(`Gemini 2.0 failed: ${err.message}. Trying 1.5 fallback...`);
     try {
       const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
         generationConfig: { temperature: 0.7, maxOutputTokens: 1200 },
       });
-      return (await model.generateContent(prompt)).response.text() ?? null;
-    } catch (err) {
-      console.error("Gemini fallback failed:", err);
+      const result = await Promise.race([
+        model.generateContent(prompt),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Gemini Timeout')), 15000))
+      ]) as any;
+      return result.response.text() ?? null;
+    } catch (err2: any) {
+      console.error("Gemini fallback failed completely:", err2.message);
       return null;
     }
   }
